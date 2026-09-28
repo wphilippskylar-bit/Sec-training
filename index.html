@@ -157,6 +157,45 @@
     padding:8px 10px; font-family:var(--sans); font-size:13px;
   }
   a{color:var(--accent);}
+
+  /* ===== Tabs + Dion analysis / weak spots ===== */
+  .tabs{display:flex; gap:6px; margin:-8px 0 22px; flex-wrap:wrap;}
+  .tab-btn{background:var(--panel); border:1px solid var(--line); color:var(--text-dim); font-family:var(--mono); font-size:12px; letter-spacing:.5px; padding:8px 14px; border-radius:20px; cursor:pointer;}
+  .tab-btn:hover{border-color:var(--accent); color:var(--text);}
+  .tab-btn.active{background:rgba(45,217,196,0.1); border-color:var(--accent); color:var(--accent);}
+  .tbl-wrap{overflow-x:auto; margin-top:10px;}
+  table.dt{width:100%; border-collapse:collapse; font-size:13px;}
+  table.dt th{font-family:var(--mono); font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--text-dim); text-align:left; padding:8px 8px; border-bottom:1px solid var(--line); white-space:nowrap;}
+  table.dt td{padding:8px 8px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.45;}
+  table.dt tr:last-child td{border-bottom:none;}
+  table.dt td.mono{font-family:var(--mono); white-space:nowrap;}
+  table.dt tr.hot td{background:rgba(242,184,75,0.06);}
+  .flag{font-family:var(--mono); font-size:9px; color:var(--amber); border:1px solid rgba(242,184,75,.5); border-radius:8px; padding:1px 6px; margin-left:6px; white-space:nowrap;}
+  .pct-good{color:var(--green);} .pct-mid{color:var(--amber);} .pct-bad{color:var(--red);}
+  ol.fix{padding-left:20px; margin:8px 0 0;} ol.fix li{margin-bottom:10px; font-size:13px; line-height:1.55;}
+  ol.fix li b{color:var(--text);}
+  ul.tight{padding-left:18px; margin:8px 0 0;} ul.tight li{font-size:13px; line-height:1.55; margin-bottom:8px;}
+  .attempt-bars{display:flex; align-items:flex-end; gap:8px; height:auto; margin:22px 0 4px; position:relative;}
+  .attempt-bars .ab{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;}
+  .attempt-bars .ab .bw{height:80px; width:100%; display:flex; align-items:flex-end; justify-content:center;}
+  .attempt-bars .ab .bar{width:100%; max-width:46px; border-radius:4px 4px 0 0; background:var(--accent-dim);}
+  .attempt-bars .ab .v{font-family:var(--mono); font-size:11px; margin-bottom:4px;}
+  .attempt-bars .ab .l{font-family:var(--mono); font-size:9px; color:var(--text-dim); margin-top:4px; height:14px;}
+  .pass-line{position:absolute; left:0; right:0; border-top:1px dashed var(--amber);}
+  .pass-line span{position:absolute; right:0; top:-15px; font-family:var(--mono); font-size:9px; color:var(--amber);}
+  details.vset{border:1px solid var(--line); border-radius:8px; margin-bottom:10px; background:var(--panel-2);}
+  details.vset summary{cursor:pointer; padding:12px 14px; font-weight:600; font-size:14px; display:flex; justify-content:space-between; align-items:center; gap:10px; list-style:none;}
+  details.vset summary::-webkit-details-marker{display:none;}
+  details.vset summary .sub{font-family:var(--mono); font-size:10px; color:var(--text-dim); font-weight:400;}
+  details.vset .inner{padding:0 14px 14px;}
+  .tell{font-family:var(--mono); font-size:11px; color:var(--accent);}
+  .btn-sm{font-size:12px; padding:7px 12px;}
+  .flashcard{min-height:220px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; cursor:pointer; padding:30px 20px; background:var(--panel-2); border:1px solid var(--line); border-radius:10px; user-select:none;}
+  .flashcard .term{font-size:22px; font-weight:600;}
+  .flashcard .def{font-size:15px; line-height:1.6; margin-top:14px;}
+  .flashcard .hint{font-family:var(--mono); font-size:11px; color:var(--text-dim); margin-top:18px;}
+  .flashcard .setname{font-family:var(--mono); font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--text-dim); margin-bottom:14px;}
+  .pick-note{font-size:12px; color:var(--amber); font-family:var(--mono); display:block; margin-bottom:6px;}
 </style>
 
 <link rel="manifest" href="manifest.json">
@@ -176,6 +215,513 @@ const QUESTION_BANK = [{"domain": "1.0 General Security Concepts", "question": "
 const ACRONYM_BANK = [{"a": "2FA", "e": "Two-factor Authentication"}, {"a": "3DES", "e": "Triple Data Encryption Standard"}, {"a": "AAA", "e": "Authentication, Authorization, and Accounting"}, {"a": "ACL", "e": "Access Control List"}, {"a": "AES", "e": "Advanced Encryption Standard"}, {"a": "AES-256", "e": "Advanced Encryption Standard 256-bit"}, {"a": "AH", "e": "Authentication Header"}, {"a": "AI", "e": "Artificial Intelligence"}, {"a": "AIS", "e": "Automated Indicator Sharing"}, {"a": "ALE", "e": "Annualized Loss Expectancy"}, {"a": "AP", "e": "Access Point"}, {"a": "API", "e": "Application Programming Interface"}, {"a": "APT", "e": "Advanced Persistent Threat"}, {"a": "ARO", "e": "Annualized Rate of Occurrence"}, {"a": "ARP", "e": "Address Resolution Protocol"}, {"a": "ASLR", "e": "Address Space Layout Randomization"}, {"a": "ATT&CK", "e": "Adversarial Tactics, Techniques, and Common Knowledge"}, {"a": "AUP", "e": "Acceptable Use Policy"}, {"a": "AV", "e": "Antivirus"}, {"a": "BASH", "e": "Bourne Again Shell"}, {"a": "BCP", "e": "Business Continuity Plan"}, {"a": "BGP", "e": "Border Gateway Protocol"}, {"a": "BIA", "e": "Business Impact Analysis"}, {"a": "BIOS", "e": "Basic Input/Output System"}, {"a": "BPA", "e": "Business Partners Agreement"}, {"a": "BPDU", "e": "Bridge Protocol Data Unit"}, {"a": "BYOD", "e": "Bring Your Own Device"}, {"a": "CA", "e": "Certificate Authority"}, {"a": "CAPTCHA", "e": "Completely Automated Public Turing Test to Tell Computers and Humans Apart"}, {"a": "CAR", "e": "Corrective Action Report"}, {"a": "CASB", "e": "Cloud Access Security Broker"}, {"a": "CBC", "e": "Cipher Block Chaining"}, {"a": "CCMP", "e": "Counter Mode/CBC-MAC Protocol"}, {"a": "CCTV", "e": "Closed-Circuit Television"}, {"a": "CERT", "e": "Computer Emergency Response Team"}, {"a": "CFB", "e": "Cipher Feedback"}, {"a": "CHAP", "e": "Challenge Handshake Authentication Protocol"}, {"a": "CIA", "e": "Confidentiality, Integrity, and Availability"}, {"a": "CIO", "e": "Chief Information Officer"}, {"a": "CIRT", "e": "Computer Incident Response Team"}, {"a": "CMS", "e": "Content Management System"}, {"a": "COBO", "e": "Corporate-owned, Business-only"}, {"a": "COOP", "e": "Continuity of Operations Planning"}, {"a": "COPE", "e": "Corporate Owned, Personally Enabled"}, {"a": "CP", "e": "Contingency Planning"}, {"a": "CRC", "e": "Cyclic Redundancy Check"}, {"a": "CRL", "e": "Certificate Revocation List"}, {"a": "CSA", "e": "Cloud Security Alliance"}, {"a": "CSIRT", "e": "Computer Security Incident Response Team"}, {"a": "CSO", "e": "Chief Security Officer"}, {"a": "CSP", "e": "Cloud Service Provider"}, {"a": "CSR", "e": "Certificate Signing Request"}, {"a": "CSRF", "e": "Cross-Site Request Forgery"}, {"a": "CSU", "e": "Channel Service Unit"}, {"a": "CTI", "e": "Cyber Threat Intelligence"}, {"a": "CTM", "e": "Counter Mode"}, {"a": "CTO", "e": "Chief Technology Officer"}, {"a": "CVE", "e": "Common Vulnerability Enumeration"}, {"a": "CVSS", "e": "Common Vulnerability Scoring System"}, {"a": "CYOD", "e": "Choose Your Own Device"}, {"a": "DAC", "e": "Discretionary Access Control"}, {"a": "DBA", "e": "Database Administrator"}, {"a": "DDoS", "e": "Distributed Denial of Service"}, {"a": "DEP", "e": "Data Execution Prevention"}, {"a": "DES", "e": "Data Encryption Standard"}, {"a": "DHCP", "e": "Dynamic Host Configuration Protocol"}, {"a": "DHE", "e": "Diffie-Hellman Ephemeral"}, {"a": "DKIM", "e": "DomainKeys Identified Mail"}, {"a": "DLL", "e": "Dynamic Link Library"}, {"a": "DLP", "e": "Data Loss Prevention"}, {"a": "DMARC", "e": "Domain-based Message Authentication, Reporting, and Conformance"}, {"a": "DMZ", "e": "Demilitarized Zone"}, {"a": "DNAT", "e": "Destination Network Address Translation"}, {"a": "DNS", "e": "Domain Name System"}, {"a": "DNSSEC", "e": "Domain Name System Security Extensions"}, {"a": "DoS", "e": "Denial of Service"}, {"a": "DPO", "e": "Data Privacy Officer"}, {"a": "DRP", "e": "Disaster Recovery Plan"}, {"a": "DSA", "e": "Digital Signature Algorithm"}, {"a": "DSL", "e": "Digital Subscriber Line"}, {"a": "EAP", "e": "Extensible Authentication Protocol"}, {"a": "ECB", "e": "Electronic Code Book"}, {"a": "ECC", "e": "Elliptic Curve Cryptography"}, {"a": "ECDHE", "e": "Elliptic Curve Diffie-Hellman Ephemeral"}, {"a": "ECDSA", "e": "Elliptic Curve Digital Signature Algorithm"}, {"a": "EDR", "e": "Endpoint Detection and Response"}, {"a": "EFS", "e": "Encrypted File System"}, {"a": "ERP", "e": "Enterprise Resource Planning"}, {"a": "ESN", "e": "Electronic Serial Number"}, {"a": "ESP", "e": "Encapsulated Security Payload"}, {"a": "EULA", "e": "End User License Agreement"}, {"a": "FACL", "e": "File System Access Control List"}, {"a": "FDE", "e": "Full Disk Encryption"}, {"a": "FIM", "e": "File Integrity Monitoring"}, {"a": "FPGA", "e": "Field Programmable Gate Array"}, {"a": "FRR", "e": "False Rejection Rate"}, {"a": "FTP", "e": "File Transfer Protocol"}, {"a": "FTPS", "e": "File Transfer Protocol Secure"}, {"a": "GCM", "e": "Galois Counter Mode"}, {"a": "GDPR", "e": "General Data Protection Regulation"}, {"a": "GPG", "e": "Gnu Privacy Guard"}, {"a": "GPO", "e": "Group Policy Object"}, {"a": "GPS", "e": "Global Positioning System"}, {"a": "GPU", "e": "Graphics Processing Unit"}, {"a": "GRE", "e": "Generic Routing Encapsulation"}, {"a": "HA", "e": "High Availability"}, {"a": "HDD", "e": "Hard Disk Drive"}, {"a": "HIDS", "e": "Host-based Intrusion Detection System"}, {"a": "HIPAA", "e": "Health Insurance Portability and Accountability Act"}, {"a": "HIPS", "e": "Host-based Intrusion Prevention System"}, {"a": "HMAC", "e": "Hash-based Message Authentication Code"}, {"a": "HOTP", "e": "HMAC-based One-Time Password"}, {"a": "HSM", "e": "Hardware Security Module"}, {"a": "HTML", "e": "Hypertext Markup Language"}, {"a": "HTTP", "e": "Hypertext Transfer Protocol"}, {"a": "HTTPS", "e": "Hypertext Transfer Protocol Secure"}, {"a": "HVAC", "e": "Heating, Ventilation, and Air Conditioning"}, {"a": "IaaS", "e": "Infrastructure as a Service"}, {"a": "IaC", "e": "Infrastructure as Code"}, {"a": "IAM", "e": "Identity and Access Management"}, {"a": "ICMP", "e": "Internet Control Message Protocol"}, {"a": "ICS", "e": "Industrial Control System"}, {"a": "IDEA", "e": "International Data Encryption Algorithm"}, {"a": "IDF", "e": "Intermediate Distribution Frame"}, {"a": "IdP", "e": "Identity Provider"}, {"a": "IDS", "e": "Intrusion Detection System"}, {"a": "IEEE", "e": "Institute of Electrical and Electronics Engineers"}, {"a": "IKE", "e": "Internet Key Exchange"}, {"a": "IMAP", "e": "Internet Message Access Protocol"}, {"a": "IoC", "e": "Indicator of Compromise"}, {"a": "IoT", "e": "Internet of Things"}, {"a": "IP", "e": "Internet Protocol"}, {"a": "IPS", "e": "Intrusion Prevention System"}, {"a": "IPSec", "e": "Internet Protocol Security"}, {"a": "IR", "e": "Incident Response"}, {"a": "IRC", "e": "Internet Relay Chat"}, {"a": "IRP", "e": "Incident Response Plan"}, {"a": "ISO", "e": "International Organization for Standardization"}, {"a": "ISP", "e": "Internet Service Provider"}, {"a": "ISSO", "e": "Information Systems Security Officer"}, {"a": "IV", "e": "Initialization Vector"}, {"a": "KDC", "e": "Key Distribution Center"}, {"a": "KEK", "e": "Key Encryption Key"}, {"a": "L2TP", "e": "Layer 2 Tunneling Protocol"}, {"a": "LAN", "e": "Local Area Network"}, {"a": "LDAP", "e": "Lightweight Directory Access Protocol"}, {"a": "LEAP", "e": "Lightweight Extensible Authentication Protocol"}, {"a": "MaaS", "e": "Monitoring as a Service"}, {"a": "MAC", "e": "Mandatory Access Control (or Media Access Control / Message Authentication Code)"}, {"a": "MAM", "e": "Mobile Application Management"}, {"a": "MAN", "e": "Metropolitan Area Network"}, {"a": "MBR", "e": "Master Boot Record"}, {"a": "MD5", "e": "Message Digest 5"}, {"a": "MDF", "e": "Main Distribution Frame"}, {"a": "MDM", "e": "Mobile Device Management"}, {"a": "MFA", "e": "Multifactor Authentication"}, {"a": "MFD", "e": "Multifunction Device"}, {"a": "MFP", "e": "Multifunction Printer"}, {"a": "ML", "e": "Machine Learning"}, {"a": "MMS", "e": "Multimedia Message Service"}, {"a": "MOA", "e": "Memorandum of Agreement"}, {"a": "MOU", "e": "Memorandum of Understanding"}, {"a": "MPLS", "e": "Multi-protocol Label Switching"}, {"a": "MSA", "e": "Master Service Agreement"}, {"a": "MSCHAP", "e": "Microsoft Challenge Handshake Authentication Protocol"}, {"a": "MSP", "e": "Managed Service Provider"}, {"a": "MSSP", "e": "Managed Security Service Provider"}, {"a": "MTBF", "e": "Mean Time Between Failures"}, {"a": "MTTF", "e": "Mean Time to Failure"}, {"a": "MTTR", "e": "Mean Time to Recover"}, {"a": "MTU", "e": "Maximum Transmission Unit"}, {"a": "MX", "e": "Mail Exchange"}, {"a": "NAC", "e": "Network Access Control"}, {"a": "NAT", "e": "Network Address Translation"}, {"a": "NDA", "e": "Non-Disclosure Agreement"}, {"a": "NFC", "e": "Near Field Communication"}, {"a": "NGFW", "e": "Next-Generation Firewall"}, {"a": "NIDS", "e": "Network-based Intrusion Detection System"}, {"a": "NIPS", "e": "Network-based Intrusion Prevention System"}, {"a": "NIST", "e": "National Institute of Standards and Technology"}, {"a": "NTFS", "e": "New Technology File System"}, {"a": "NTLM", "e": "New Technology LAN Manager"}, {"a": "NTP", "e": "Network Time Protocol"}, {"a": "OAUTH", "e": "Open Authorization"}, {"a": "OCSP", "e": "Online Certificate Status Protocol"}, {"a": "OID", "e": "Object Identifier"}, {"a": "OS", "e": "Operating System"}, {"a": "OSINT", "e": "Open-Source Intelligence"}, {"a": "OSPF", "e": "Open Shortest Path First"}, {"a": "OT", "e": "Operational Technology"}, {"a": "OTA", "e": "Over the Air"}, {"a": "OVAL", "e": "Open Vulnerability and Assessment Language"}, {"a": "OWASP", "e": "Open Worldwide Application Security Project"}, {"a": "P12", "e": "PKCS #12"}, {"a": "P2P", "e": "Peer to Peer"}, {"a": "PaaS", "e": "Platform as a Service"}, {"a": "PAC", "e": "Proxy Auto Configuration"}, {"a": "PAM", "e": "Privileged Access Management (or Pluggable Authentication Modules)"}, {"a": "PAP", "e": "Password Authentication Protocol"}, {"a": "PAT", "e": "Port Address Translation"}, {"a": "PBX", "e": "Private Branch Exchange"}, {"a": "PCAP", "e": "Packet Capture"}, {"a": "PCI DSS", "e": "Payment Card Industry Data Security Standard"}, {"a": "PDU", "e": "Power Distribution Unit"}, {"a": "PEAP", "e": "Protected Extensible Authentication Protocol"}, {"a": "PED", "e": "Personal Electronic Device"}, {"a": "PEM", "e": "Privacy Enhanced Mail"}, {"a": "PFS", "e": "Perfect Forward Secrecy"}, {"a": "PGP", "e": "Pretty Good Privacy"}, {"a": "PHI", "e": "Protected Health Information"}, {"a": "PII", "e": "Personally Identifiable Information"}, {"a": "PIV", "e": "Personal Identity Verification"}, {"a": "PKCS", "e": "Public Key Cryptography Standards"}, {"a": "PKI", "e": "Public Key Infrastructure"}, {"a": "POP3", "e": "Post Office Protocol"}, {"a": "POTS", "e": "Plain Old Telephone Service"}, {"a": "PPP", "e": "Point-to-Point Protocol"}, {"a": "PPTP", "e": "Point-to-Point Tunneling Protocol"}, {"a": "PSK", "e": "Pre-Shared Key"}, {"a": "PTZ", "e": "Pan-tilt-zoom"}, {"a": "PUP", "e": "Potentially Unwanted Program"}, {"a": "RA", "e": "Recovery Agent (or Registration Authority)"}, {"a": "RAD", "e": "Rapid Application Development"}, {"a": "RADIUS", "e": "Remote Authentication Dial-In User Service"}, {"a": "RAID", "e": "Redundant Array of Independent Disks"}, {"a": "RAS", "e": "Remote Access Server"}, {"a": "RAT", "e": "Remote Access Trojan"}, {"a": "RBAC", "e": "Role-based Access Control (or Rule-based Access Control)"}, {"a": "RC4", "e": "Rivest Cipher version 4"}, {"a": "RDP", "e": "Remote Desktop Protocol"}, {"a": "RFID", "e": "Radio Frequency Identification"}, {"a": "RIPEMD", "e": "RACE Integrity Primitives Evaluation Message Digest"}, {"a": "ROI", "e": "Return on Investment"}, {"a": "RPO", "e": "Recovery Point Objective"}, {"a": "RSA", "e": "Rivest, Shamir, & Adleman"}, {"a": "RTBH", "e": "Remotely Triggered Black Hole"}, {"a": "RTO", "e": "Recovery Time Objective"}, {"a": "RTOS", "e": "Real-Time Operating System"}, {"a": "RTP", "e": "Real-time Transport Protocol"}, {"a": "S/MIME", "e": "Secure/Multipurpose Internet Mail Extensions"}, {"a": "SaaS", "e": "Software as a Service"}, {"a": "SAE", "e": "Simultaneous Authentication of Equals"}, {"a": "SAML", "e": "Security Assertion Markup Language"}, {"a": "SAN", "e": "Storage Area Network (or Subject Alternative Name)"}, {"a": "SASE", "e": "Secure Access Service Edge"}, {"a": "SCADA", "e": "Supervisory Control and Data Acquisition"}, {"a": "SCAP", "e": "Security Content Automation Protocol"}, {"a": "SCEP", "e": "Simple Certificate Enrollment Protocol"}, {"a": "SD-WAN", "e": "Software Defined Wide Area Network"}, {"a": "SDK", "e": "Software Development Kit"}, {"a": "SDLC", "e": "Software Development Life Cycle"}, {"a": "SDLM", "e": "Software Development Lifecycle Methodology"}, {"a": "SDN", "e": "Software Defined Networking"}, {"a": "SE Linux", "e": "Security-enhanced Linux"}, {"a": "SED", "e": "Self-Encrypting Drive"}, {"a": "SEH", "e": "Structured Exception Handler"}, {"a": "SFTP", "e": "SSH File Transfer Protocol"}, {"a": "SHA", "e": "Secure Hashing Algorithm"}, {"a": "SHTTP", "e": "Secure Hypertext Transfer Protocol"}, {"a": "SIEM", "e": "Security Information and Event Management"}, {"a": "SLA", "e": "Service Level Agreement"}, {"a": "SLE", "e": "Single Loss Expectancy"}, {"a": "SMB", "e": "Server Message Block"}, {"a": "SMS", "e": "Short Message Service"}, {"a": "SMTP", "e": "Simple Mail Transfer Protocol"}, {"a": "SMTPS", "e": "Simple Mail Transfer Protocol Secure"}, {"a": "SNMP", "e": "Simple Network Management Protocol"}, {"a": "SOAP", "e": "Simple Object Access Protocol"}, {"a": "SOAR", "e": "Security Orchestration, Automation, and Response"}, {"a": "SOC", "e": "System on Chip (or Security Operations Center)"}, {"a": "SOW", "e": "Statement of Work"}, {"a": "SPF", "e": "Sender Policy Framework"}, {"a": "SQL", "e": "Structured Query Language"}, {"a": "SQLi", "e": "SQL Injection"}, {"a": "SRTP", "e": "Secure Real-Time Protocol"}, {"a": "SSD", "e": "Solid State Drive"}, {"a": "SSH", "e": "Secure Shell"}, {"a": "SSL", "e": "Secure Sockets Layer"}, {"a": "SSO", "e": "Single Sign-On"}, {"a": "STIX", "e": "Structured Threat Information eXpression"}, {"a": "SWG", "e": "Secure Web Gateway"}, {"a": "TACACS+", "e": "Terminal Access Controller Access-Control System Plus"}, {"a": "TAXII", "e": "Trusted Automated eXchange of Indicator Information"}, {"a": "TCP/IP", "e": "Transmission Control Protocol/Internet Protocol"}, {"a": "TKIP", "e": "Temporal Key Integrity Protocol"}, {"a": "TLS", "e": "Transport Layer Security"}, {"a": "TOC", "e": "Time-of-check"}, {"a": "TOTP", "e": "Time-based One-Time Password"}, {"a": "TOU", "e": "Time-of-use"}, {"a": "TPM", "e": "Trusted Platform Module"}, {"a": "TSIG", "e": "Transaction Signature"}, {"a": "TTP", "e": "Tactics, Techniques, and Procedures"}, {"a": "UAT", "e": "User Acceptance Testing"}, {"a": "UAV", "e": "Unmanned Aerial Vehicle"}, {"a": "UBA", "e": "User Behavior Analytics"}, {"a": "UDP", "e": "User Datagram Protocol"}, {"a": "UEFI", "e": "Unified Extensible Firmware Interface"}, {"a": "UEM", "e": "Unified Endpoint Management"}, {"a": "UPS", "e": "Uninterruptible Power Supply"}, {"a": "URI", "e": "Uniform Resource Identifier"}, {"a": "URL", "e": "Universal Resource Locator"}, {"a": "USB", "e": "Universal Serial Bus"}, {"a": "USB OTG", "e": "USB On the Go"}, {"a": "UTM", "e": "Unified Threat Management"}, {"a": "UTP", "e": "Unshielded Twisted Pair"}, {"a": "VBA", "e": "Visual Basic"}, {"a": "VDE", "e": "Virtual Desktop Environment"}, {"a": "VDI", "e": "Virtual Desktop Infrastructure"}, {"a": "VLAN", "e": "Virtual Local Area Network"}, {"a": "VLSM", "e": "Variable Length Subnet Masking"}, {"a": "VM", "e": "Virtual Machine"}, {"a": "VPC", "e": "Virtual Private Cloud"}, {"a": "VPN", "e": "Virtual Private Network"}, {"a": "VTC", "e": "Video Teleconferencing"}, {"a": "WAF", "e": "Web Application Firewall"}, {"a": "WAP", "e": "Wireless Access Point"}, {"a": "WEP", "e": "Wired Equivalent Privacy"}, {"a": "WIDS", "e": "Wireless Intrusion Detection System"}, {"a": "WIPS", "e": "Wireless Intrusion Prevention System"}, {"a": "WO", "e": "Work Order"}, {"a": "WPA", "e": "Wi-Fi Protected Access"}, {"a": "WPA2", "e": "Wi-Fi Protected Access 2"}, {"a": "WPA3", "e": "Wi-Fi Protected Access 3"}, {"a": "WPS", "e": "Wi-Fi Protected Setup"}, {"a": "WTLS", "e": "Wireless TLS"}, {"a": "XDR", "e": "Extended Detection and Response"}, {"a": "XML", "e": "Extensible Markup Language"}, {"a": "XOR", "e": "Exclusive OR"}, {"a": "XSRF", "e": "Cross-Site Request Forgery"}, {"a": "XSS", "e": "Cross-Site Scripting"}];
 </script>
 <script>
+// ===== Weak-spot data built from Phil's Dion Training practice exams (7 attempts, Sep 2026) =====
+// Question stems are paraphrased summaries of missed concepts, not reproduced exam items.
+// w[0] = the answer Phil chose on the Dion exam. n = how many attempts he missed it on.
+const DION_SUMMARY = {
+  attempts: [
+    { label: "Attempt 1", date: "Sep 1", pct: 62 },
+    { label: "Attempt 3", date: "Sep 4", pct: 69 },
+    { label: "Attempt 4", date: "Sep 10", pct: 56 },
+    { label: "Attempt 5", date: "Sep 14", pct: 76 },
+    { label: "Attempt 6", date: "Sep 15", pct: 77 },
+    { label: "Attempt 7", date: "Sep 18", pct: 73 },
+    { label: "Attempt 8", date: "Sep 23", pct: 69 }
+  ],
+  domains: [
+    { d: "3", name: "3.0 Security Architecture", weight: 18, all: 61, allFrac: "70/115", recent: 65, misses: 45 },
+    { d: "4", name: "4.0 Security Operations", weight: 28, all: 66, allFrac: "114/174", recent: 73, misses: 60 },
+    { d: "5", name: "5.0 Program Mgmt & Oversight", weight: 20, all: 67, allFrac: "80/120", recent: 63, misses: 40 },
+    { d: "1", name: "1.0 General Security Concepts", weight: 12, all: 71, allFrac: "56/79", recent: 79, misses: 23 },
+    { d: "2", name: "2.0 Threats, Vulns & Mitigations", weight: 22, all: 80, allFrac: "113/142", recent: 84, misses: 29 }
+  ],
+  weakObjectives: [
+    ["4.5", "Modify enterprise capabilities (firewall sim, email auth, web filtering)", "18 of 28"],
+    ["5.3", "Third-party risk: vendor agreements and assessment", "9 of 16"],
+    ["4.4", "Alerting and monitoring tools (\"importance of\" / NOT-true)", "13 of 25"],
+    ["3.2", "Secure enterprise infrastructure (appliances, placement)", "13 of 29"],
+    ["3.1", "Architecture models and considerations", "15 of 38"],
+    ["5.1", "Governance: data roles, laws, standards", "10 of 26"]
+  ],
+  fixFirst: [
+    ["Ports and protocols for the firewall sim (4.5)", "0 of 8 fully right. Memorize the port table below, including TCP vs UDP."],
+    ["\"Importance of [tool]\" questions (4.4)", "Vulnerability scanners missed 4 of 4 times, DLP 2 of 2. Know what each tool does AND doesn't do."],
+    ["Vendor agreements (5.3)", "SOW = tasks, deliverables, timeline, cost. SLA = service levels. MSA = umbrella terms. MOU = intent to collaborate. BPA = partnership terms. ROE = pen test scope."],
+    ["Data roles (5.1, 5.4)", "Owner = accountable, sets policy. Controller = decides why/how personal data is processed. Processor = processes for the controller. Custodian = implements the owner's rules."],
+    ["Risk vocabulary (5.2)", "Appetite / tolerance / threshold. Likelihood (qualitative) vs probability (number). EF, SLE, ALE. MTTR vs RTO. Risk owner."],
+    ["Zero Trust planes (1.2)", "Control plane = policy engine + policy administrator. Data plane = subject, PEP, data moving after approval."],
+    ["Architecture vocabulary (3.1)", "Resilience vs availability vs responsiveness. IaC vs serverless. Air-gapped. ICS/SCADA = hard to patch, legacy cleartext protocols."],
+    ["Data obfuscation methods (3.3)", "Masking keeps structure. Tokenization = separate vault. Homomorphic = compute while encrypted. Encryption hides everything."],
+    ["Network appliances (3.2)", "UTM, NGFW, WAF, IDS/IPS, sensor, jump server, port security, EAP."],
+    ["Email authentication (2.2, 4.5)", "SPF = authorized servers. DKIM = signature. DMARC = policy + reporting. None of them encrypt."]
+  ],
+  pbqs: [
+    ["Firewall configuration", "8 of 8", "Wrong ports (databases, secure syslog, SMTPS, IKE, print, SMB), TCP vs UDP, and a block rule with source and destination reversed."],
+    ["Classify threat actors", "3 of 4", "Employee copying files to a personal drive = Shadow IT. Hacktivist exposing overpricing = ethical. Nation-state taking SCADA intel = espionage. Unskilled defacement = chaos."],
+    ["Categorize security controls", "2 of 2", "MFA = Technical/Preventive. Policies and plans = Managerial. Honeypot = Detective. Backup policy = Directive."],
+    ["Deception technologies", "2 of 5", "One decoy server = honeypot. Fake record = honeytoken. Many decoys = honeynet. Decoy document = honeyfile."],
+    ["Log analysis", "2 of 7", "Found the evidence lines but picked On-path for SQL injection, or left the attack type blank (XSS)."],
+    ["Social engineering", "1 of 5", "Project-specific email = spear phishing. CFO target = whaling. Changed vendor bank details = BEC."],
+    ["Authentication factors", "1 of 1", "Token app = possession. Voice recognition = inherence."],
+    ["Network security controls", "1 of 1", "Swapped firewall and NAC."]
+  ],
+  fwRules: [
+    "A BLOCK rule's source is where the traffic starts. \"Block the ICS zone from reaching the Internet\" = source ICS subnet, destination Internet, port ANY, Deny.",
+    "ICMP (ping) has no port. Use ANY with protocol ICMP.",
+    "Read the service name carefully: \"secure syslog\" and \"SMTPS\" use different ports than plain syslog and SMTP.",
+    "\"Only\" or \"from the Admin workstation\" = a single host IP as source, not the whole subnet. \"Entire zone\" = the /24.",
+    "Protocol column: most services are TCP. The UDP ones to remember: DNS queries 53, DHCP 67/68, TFTP 69, NTP 123, SNMP 161/162, syslog 514, IKE 500/4500."
+  ],
+  patterns: [
+    ["Reaching for a familiar control", "About 15 misses were firewall, NGFW, VPN, MFA, RBAC or \"encryption\" when the scenario described something more specific."],
+    ["Broad term over the precise one", "Vishing vs impersonation, race condition vs TOC, phishing vs BEC, wireless vs on-path, file-based vs removable device."],
+    ["Near-synonym vocabulary", "Tolerance/appetite/threshold, likelihood/probability, SOW/SLA/MOU, owner/controller/processor/custodian."],
+    ["NOT-true stems", "Look for the option that is flatly wrong about what the tool IS (SCAP encrypting, technical debt measuring RTO)."],
+    ["Repeat misses", "16 questions were missed on 2+ attempts. The vulnerability-scanner question was missed every time."]
+  ]
+};
+
+// Ports: [service, port, protocol, scenario phrase, missed-on-Dion flag]
+const PORT_TABLE = [
+  ["FTP (data / control)", "20 / 21", "TCP", "insecure file transfer", 0],
+  ["SSH / SFTP / SCP", "22", "TCP", "secure file transfer with SFTP", 1],
+  ["Telnet", "23", "TCP", "insecure remote terminal (block it)", 0],
+  ["SMTP", "25", "TCP", "plain mail relay between servers", 0],
+  ["DNS", "53", "UDP (TCP for zone transfers)", "name resolution", 0],
+  ["DHCP", "67 / 68", "UDP", "automatic IP addressing", 0],
+  ["TFTP", "69", "UDP", "trivial file transfer for device configs", 0],
+  ["HTTP", "80", "TCP", "unencrypted web requests from a proxy", 0],
+  ["Kerberos", "88", "TCP/UDP", "ticket-based Windows domain authentication", 0],
+  ["POP3", "110", "TCP", "download mail (unencrypted)", 1],
+  ["NTP", "123", "UDP", "time synchronization", 1],
+  ["NetBIOS", "137-138 / 139", "UDP / TCP", "legacy Windows name and session services", 1],
+  ["IMAP", "143", "TCP", "retrieve mail and keep it on the server", 1],
+  ["SNMP / traps", "161 / 162", "UDP", "device monitoring and management", 1],
+  ["LDAP", "389", "TCP", "directory authentication queries", 0],
+  ["HTTPS", "443", "TCP", "secure web traffic to a web server", 0],
+  ["SMB", "445", "TCP", "Windows file sharing (Microsoft SMB)", 1],
+  ["SMTPS", "465 (587 submission)", "TCP", "secure email sending", 1],
+  ["IPSec IKE", "500 (4500 NAT-T)", "UDP", "IPSec VPN key exchange", 1],
+  ["Syslog", "514", "UDP", "plain syslog messages", 1],
+  ["LPR/LPD", "515", "TCP", "Windows / line printer printing", 1],
+  ["LDAPS", "636", "TCP", "encrypted directory queries", 0],
+  ["IMAPS", "993", "TCP", "encrypted IMAP", 0],
+  ["POP3S", "995", "TCP", "encrypted POP3", 0],
+  ["MS SQL Server", "1433", "TCP", "Microsoft SQL Server database queries", 1],
+  ["Oracle DB", "1521", "TCP", "Oracle database connections", 1],
+  ["RADIUS", "1812 / 1813", "UDP", "network access authentication / accounting", 0],
+  ["MySQL", "3306", "TCP", "MySQL database connections", 0],
+  ["RDP", "3389", "TCP", "remote desktop access", 1],
+  ["PostgreSQL", "5432", "TCP", "PostgreSQL database queries", 1],
+  ["SIP / SIPS", "5060 / 5061", "TCP/UDP", "VoIP call signaling", 1],
+  ["Secure syslog (TLS)", "6514", "TCP", "secure syslog to a logging service", 1]
+];
+
+// Firewall rule-building drills (built from the Dion sim scenarios)
+// choices[0] is correct.
+const FIREWALL_DRILLS = [
+  { q: "Rule: BLOCK all Internet access from the entire ICS/SCADA zone (10.50.100.0/24). Which source → destination is correct?", choices: ["10.50.100.0/24 → Internet", "Internet → 10.50.100.0/24", "10.50.100.20 → Internet", "Any → 10.50.100.0/24"], why: "Traffic you're stopping starts in the ICS zone and goes out, so the ICS subnet is the source. You had these reversed on the sim." },
+  { q: "Rule: BLOCK ICMP ping from the Employee workstation to the Screened Subnet. What goes in the Port / Protocol fields?", choices: ["ANY / ICMP", "110 / UDP", "7 / TCP", "0 / TCP"], why: "ICMP has no ports. Use ANY with protocol ICMP." },
+  { q: "Rule: ALLOW the File Server to send logs to an Internet logging service using SECURE syslog.", choices: ["6514 / TCP", "514 / UDP", "22 / TCP", "443 / TCP"], why: "Secure syslog runs over TLS on TCP 6514. Plain syslog is UDP 514." },
+  { q: "Rule: ALLOW the Lab System to send test results to external labs using SMTPS.", choices: ["465 / TCP", "25 / TCP", "993 / TCP", "143 / TCP"], why: "SMTPS = 465 (587 for submission with STARTTLS). 25 is plain SMTP." },
+  { q: "Rule: ALLOW IPSec VPN connections from the Internet to the VPN gateway.", choices: ["500 / UDP", "22 / TCP", "443 / TCP", "1723 / TCP"], why: "IPSec's IKE uses UDP 500 (4500 for NAT traversal). You entered 22/TCP on the sim." },
+  { q: "Rule: ALLOW the Admin to connect to the Print Server using the Windows print protocol (LPR/LPD).", choices: ["515 / TCP", "23 / UDP", "631 / UDP", "9100 / UDP"], why: "Dion's answer: LPR/LPD on TCP 515." },
+  { q: "Rule: ALLOW the Backup Server to reach the File Server using Microsoft SMB.", choices: ["445 / TCP", "25 / TCP", "139 / UDP", "21 / TCP"], why: "SMB = TCP 445. NetBIOS session service is 139." },
+  { q: "Rule: ALLOW remote desktop from the Admin Workstation to the Application Server only.", choices: ["3389 / TCP", "1389 / TCP", "5900 / TCP", "22 / TCP"], why: "RDP = TCP 3389. You typed 1389 on the sim." },
+  { q: "Rule: ALLOW the Historian Database to send data to the ERP Server over Microsoft SQL Server.", choices: ["1433 / TCP", "22 / TCP", "3306 / TCP", "28 / UDP"], why: "MS SQL Server = TCP 1433." },
+  { q: "Rule: ALLOW Oracle database connections from the Application Server to the Database Server only.", choices: ["1521 / TCP", "2443 / TCP", "1433 / TCP", "5432 / TCP"], why: "Oracle = TCP 1521." },
+  { q: "Rule: ALLOW the Application Server to query the Database Server using PostgreSQL.", choices: ["5432 / TCP", "1433 / UDP", "3306 / TCP", "1521 / TCP"], why: "PostgreSQL = TCP 5432. You used 1433/UDP on the sim." },
+  { q: "Rule: ALLOW the SCADA Server to sync time with Internet time servers (NTP).", choices: ["123 / UDP", "143 / TCP", "123 / TCP", "161 / UDP"], why: "NTP = UDP 123. You entered 143, which is IMAP." },
+  { q: "Rule: ALLOW the Nurse Workstation to retrieve alerts from the Pharmacy System using IMAP.", choices: ["143 / TCP", "110 / UDP", "25 / TCP", "993 / UDP"], why: "IMAP = TCP 143. 110 is POP3." },
+  { q: "Rule: BLOCK all NetBIOS traffic from the Corporate Network (172.20.20.0/24) to the Internal Network (192.168.50.0/24).", choices: ["172.20.20.0/24 → 192.168.50.0/24, 139 / TCP, Deny", "172.20.20.5 → 192.168.50.30, 23 / TCP, Deny", "192.168.50.0/24 → 172.20.20.0/24, 139 / TCP, Deny", "172.20.20.0/24 → 192.168.50.0/24, 445 / TCP, Allow"], why: "Whole corporate subnet as source, whole internal subnet as destination, NetBIOS session port 139, Deny." },
+  { q: "Rule: ALLOW secure file transfer from the File Server to the HMI Workstation using SFTP.", choices: ["22 / TCP", "21 / TCP", "28 / TCP", "990 / TCP"], why: "SFTP runs over SSH on TCP 22. FTPS is 989/990; plain FTP is 21." },
+  { q: "Rule: BLOCK Telnet from the Internet to any server in the Datacenter (10.20.30.0/24).", choices: ["Internet → 10.20.30.0/24, 23 / TCP, Deny", "Internet → Any, 23 / Any, Deny", "10.20.30.0/24 → Internet, 23 / TCP, Deny", "Internet → 10.20.30.0/24, 22 / TCP, Deny"], why: "Name the datacenter subnet as the destination, not Any, and Telnet is TCP 23." }
+];
+
+// Missed-concept question bank. d = domain number. a = correct answer. w[0] = what Phil chose on Dion.
+const MISS_BANK_RAW = [
+  // ---------- Domain 1 ----------
+  { d:"1", obj:"1.1", q:"An analyst sets up regular review of log files. Which control CATEGORY is log monitoring?", a:"Operational", w:["Technical","Managerial","Physical"], why:"Day-to-day tasks carried out by people (log review, backups, config management) are operational. Technical controls are implemented in hardware or software." },
+  { d:"1", obj:"1.1", q:"A company wants to proactively identify and address known weaknesses in its security posture. Which control fits?", a:"Vulnerability management", w:["Firewall","Intrusion detection system","Encryption"], why:"Only vulnerability management identifies, assesses and remediates known weaknesses." },
+  { d:"1", obj:"1.1", q:"Categorize multi-factor authentication (category / type).", a:"Technical / Preventive", w:["Operational / Preventive","Technical / Detective","Managerial / Directive"], why:"MFA is implemented in software (technical) and blocks access before it happens (preventive)." },
+  { d:"1", obj:"1.1", q:"Categorize a backup policy (category / type).", a:"Managerial / Directive", w:["Operational / Corrective","Technical / Corrective","Operational / Directive"], why:"Policies are managerial (oversight). A policy directs behavior, so it's directive." },
+  { d:"1", obj:"1.1", q:"Categorize a honeypot system (category / type).", a:"Technical / Detective", w:["Technical / Directive","Physical / Deterrent","Operational / Detective"], why:"It's software/hardware (technical) and provides evidence of an intruder (detective)." },
+  { d:"1", obj:"1.1", q:"Categorize a security policy document (category / type).", a:"Managerial / Directive", w:["Operational / Directive","Technical / Preventive","Managerial / Preventive"], why:"Policy documents = managerial oversight that directs behavior." },
+  { d:"1", obj:"1.1", q:"Categorize an incident response plan (category / type).", a:"Managerial / Corrective", w:["Operational / Corrective","Managerial / Detective","Technical / Corrective"], why:"A plan is managerial; its purpose is restoring operations after an incident (corrective)." },
+  { d:"1", obj:"1.2", q:"Employees must have a token (card) to get into certain areas. Which physical control is this?", a:"Access badges", w:["Access control vestibules","Video surveillance","Fencing"], why:"The badge is the token. Vestibules control the flow of people; they don't need a token by definition." },
+  { d:"1", obj:"1.2", q:"A facilities manager is worried about piggybacking. Which control addresses it BEST?", a:"Access control vestibule", w:["Access badges","Video surveillance","Lighting"], why:"A badge doesn't stop someone following you in. A vestibule (mantrap) lets one person through at a time." },
+  { d:"1", obj:"1.2", q:"In a Zero Trust model, which principle best describes how access is granted?", a:"Least privilege", w:["Trust but verify","Role-based access control","Implicit trust"], why:"Zero Trust = never trust by default, grant minimum access, verify continually. 'Trust but verify' still starts with trust." },
+  { d:"1", obj:"1.2", q:"What is the role of the Data Plane in Zero Trust architecture?", a:"Process and transmit data between systems", w:["Enforce security policies across the network","Manage identity and authentication requests","Analyze and detect threats in real time"], why:"Policy decisions live in the control plane. The data plane is the path the data travels.", n:2 },
+  { d:"1", obj:"1.2", q:"Which statement BEST describes the Data Plane in Zero Trust?", a:"Oversees data conveyance after access is approved", w:["Focuses on dynamic security decisions","References policies to decide on access","Decides on access using identity verification"], why:"Decisions and policies = control plane. Moving data after approval = data plane." },
+  { d:"1", obj:"1.2", q:"Which Zero Trust control-plane element manages user access based on roles and responsibilities?", a:"Policy-driven access control", w:["Role-based access control","Least privilege","Implicit deny"], why:"RBAC, least privilege and implicit deny exist in any architecture; policy-driven access control is the Zero Trust term." },
+  { d:"1", obj:"1.2", q:"Which Zero Trust component defines and manages the security policies that dictate access?", a:"Policy administrator", w:["Authentication server","Policy enforcement point","Client host"], why:"The policy administrator manages the policies the policy engine uses. The PEP enforces decisions." },
+  { d:"1", obj:"1.2", q:"A PostgreSQL server with intentionally weak authentication logs every connection attempt. Which deception technology?", a:"Honeypot", w:["Honeynet","Honeytoken","Honeyfile"], why:"One decoy system = honeypot." },
+  { d:"1", obj:"1.2", q:"A fabricated customer record with a unique email address triggers an alert when exported. Which deception technology?", a:"Honeytoken", w:["Honeypot","Honeyfile","Honeynet"], why:"A fake piece of data (record, credential, key) = honeytoken." },
+  { d:"1", obj:"1.2", q:"Multiple cloud instances configured as a fake e-commerce platform on an isolated VPC. Which deception technology?", a:"Honeynet", w:["Honeypot","Honeytoken","Honeyfile"], why:"A network of decoy systems = honeynet." },
+  { d:"1", obj:"1.3", q:"Which change-management process ensures a proposed change is assessed, reviewed and authorized?", a:"Approval process", w:["Deployment process","Testing process","Development process"], why:"Approval comes before testing and deployment." },
+  { d:"1", obj:"1.4", q:"A school wants to encrypt its entire student-records collection at once while keeping queries efficient. Which level?", a:"Database encryption", w:["Volume encryption","Record-level encryption","Partition encryption"], why:"Database-level encryption (e.g., TDE) is built for this. Record-level slows large queries." },
+  { d:"1", obj:"1.4", q:"Which solution distributes transaction data across a peer-to-peer network so no one entity controls the history?", a:"Open public ledger", w:["Asymmetric encryption","Hashing algorithms","Digital certificates"], why:"Blockchain's distributed public ledger." },
+  { d:"1", obj:"1.4", q:"A company wants a certificate signed and verified by a recognized external authority. Which type?", a:"Third-party certificate", w:["CSR","Self-signed certificate","Wildcard certificate"], why:"A CSR is a request, not a certificate." },
+  { d:"1", obj:"1.4", q:"Which certificate is signed with the entity's own private key and mostly used internally or for testing?", a:"Self-signed certificate", w:["Root certificate","CSR","Extended validation certificate"], why:"Signed by itself, not trusted externally." },
+  { d:"1", obj:"1.4", q:"Which certificate secures multiple subdomains under one primary domain?", a:"Wildcard certificate", w:["CSR","Third-party certificate","Self-signed certificate"], why:"*.domain.com" },
+  { d:"1", obj:"1.4", q:"A client wants to send a message only the company can decrypt. What does the client encrypt it with?", a:"The company's public key", w:["The company's private key","Key escrow","A wildcard certificate"], why:"Encrypt with the recipient's public key; only the recipient's private key decrypts." },
+  { d:"1", obj:"1.4", q:"Which term is the mathematical structure used to scramble data so only a specific key can unscramble it?", a:"Encryption algorithm", w:["Hash function","Digital signature","Cipher block"], why:"Hashes are one-way with no key. A cipher block is a chunk of data, not the method." },
+  { d:"1", obj:"1.4", q:"Which protocol encrypts voice traffic over IP?", a:"SRTP", w:["ICMP","ARP","DHCP"], why:"Secure Real-time Transport Protocol." },
+  // ---------- Domain 2 ----------
+  { d:"2", obj:"2.1", q:"A competitor hires hackers to steal product designs and trade secrets to build similar products. Motivation?", a:"Espionage", w:["Financial gain","Revenge","Ethical hacking"], why:"Stealing specific data for competitive advantage = espionage." },
+  { d:"2", obj:"2.1", q:"An employee copies internal files to a personal cloud drive so they can work at home. Threat actor?", a:"Shadow IT", w:["Insider threat","Unskilled attacker","Organized crime"], why:"Unsanctioned tech used without malice = Shadow IT (motivation: data exfiltration)." },
+  { d:"2", obj:"2.1", q:"A group leaks a drug company's cost and profit data to show it overcharges. Motivation?", a:"Ethical", w:["Philosophical/political","Financial gain","Revenge"], why:"Exposing unethical conduct = ethical motive. Nothing ties it to a political goal." },
+  { d:"2", obj:"2.1", q:"A foreign country's cyber unit infiltrates an energy provider to harvest SCADA intelligence. Motivation?", a:"Espionage", w:["Data exfiltration","War","Financial gain"], why:"Gathering intelligence for strategic advantage = espionage." },
+  { d:"2", obj:"2.1", q:"An attacker uses an off-the-shelf toolkit to deface a school website. Motivation?", a:"Chaos", w:["Service disruption","Political","Financial gain"], why:"Unskilled attacker, no other goal = chaos. The site isn't taken down, so it isn't service disruption." },
+  { d:"2", obj:"2.2", q:"A caller claiming to be a named IT support tech asks an employee for his password. MOST accurate technique?", a:"Impersonation", w:["Vishing","Phishing","Tailgating"], why:"The key element is pretending to be a specific trusted person." },
+  { d:"2", obj:"2.2", q:"A look-alike CEO email domain sends a hurried invoice request that matches the CEO's habits. Attack type?", a:"Business email compromise", w:["Phishing","Pretexting","Watering hole"], why:"Researched, targeted payment fraud = BEC." },
+  { d:"2", obj:"2.2", q:"Which technology lets a domain owner declare legitimate email sources AND get reports on authentication results?", a:"DMARC", w:["DKIM","SPF","TLS"], why:"'Reporting' is the DMARC tell. It builds on SPF + DKIM." },
+  { d:"2", obj:"2.2", q:"A 'software download' turns out to be a PNG that may contain malicious code. Threat vector?", a:"Image-based", w:["File-based","Removable device","Pretexting"], why:"Name the most specific vector." },
+  { d:"2", obj:"2.2", q:"A USB drive found in the parking lot launches a keylogger when a file on it is opened. Threat vector?", a:"Removable device", w:["File-based","Default credentials","Unsecure networks"], why:"The device is the vector; the file is just the payload." },
+  { d:"2", obj:"2.2", q:"A finance manager gets an email naming a recent project, appearing to come from a known vendor, with a malware invoice. Attack?", a:"Spear phishing", w:["Whaling","Business email compromise","Watering hole"], why:"Specific to a small group = spear phishing. BEC aims to get money or data sent directly." },
+  { d:"2", obj:"2.2", q:"Accounting receives an email from the 'regular supplier' with new bank details for future payments. Attack?", a:"Business email compromise", w:["Spear phishing","Whaling","Smishing"], why:"Redirecting payments = BEC." },
+  { d:"2", obj:"2.3", q:"A malicious script runs in a visitor's browser and sends their cookies and session tokens to an attacker. Vulnerability?", a:"Cross-site scripting (XSS)", w:["CSRF","SQL injection","Buffer overflow"], why:"XSS runs script in the browser. CSRF tricks the browser into sending requests." },
+  { d:"2", obj:"2.3", q:"Unchecked user input can manipulate memory in a legacy app. What should the developer prioritize?", a:"Input validation and sanitization", w:["Firewalls and IDS","Upgrading the application","Switching programming languages"], why:"Fix it in the application. Network controls don't see app-level memory injection." },
+  { d:"2", obj:"2.3", q:"Which component provides the code to boot the OS and can enforce boot integrity checks?", a:"UEFI", w:["TPM","Hardware root of trust","NAC server"], why:"TPM stores keys and measurements but doesn't boot anything." },
+  { d:"2", obj:"2.3", q:"A process checks a resource, but another process changes it before it's used. Attack?", a:"TOCTOU", w:["Memory injection","VM escape","Buffer overflow"], why:"Time-of-check to time-of-use." },
+  { d:"2", obj:"2.3", q:"An attacker manipulates data after the app verifies it but before the app uses it. BEST description?", a:"Time-of-check (TOC)", w:["Race conditions","Memory leaks","Resource exhaustion"], why:"Race condition is the general category; pick the specific term." },
+  { d:"2", obj:"2.3", q:"MOST effective defense against VM escape reaching the host's memory?", a:"Monitor and promptly patch the hypervisor", w:["Encrypt data inside the VM","Install antivirus on each VM","Rotate VM passwords frequently"], why:"VM escape exploits the hypervisor, so the hypervisor is what you harden." },
+  { d:"2", obj:"2.3", q:"A software flaw unknown to the vendor and exploited before a patch exists is called what?", a:"Zero-day", w:["Supply chain disruption","Service disruption","Hardware incompatibility"], why:"Definition." },
+  { d:"2", obj:"2.3", q:"Which vulnerability is specific to cloud environments, risking unauthorized access and data manipulation?", a:"Insecure interfaces and APIs", w:["Side loading","XSS","Buffer overflow"], why:"Side loading is a mobile issue." },
+  { d:"2", obj:"2.4", q:"Malware uses a compromised account at the same time as the real user, from other locations. Indicator?", a:"Concurrent session usage", w:["Impossible travel","Resource consumption","Blocked content"], why:"Simultaneous sessions is the key. Impossible travel is logins too far apart in too little time." },
+  { d:"2", obj:"2.4", q:"A software flaw lets ordinary users easily gain root access. Which attack type?", a:"Privilege escalation", w:["Injection","Replay","Buffer overflow"], why:"The outcome, higher privileges, names the attack." },
+  { d:"2", obj:"2.4", q:"On open hotel Wi-Fi, how should an employee keep communications confidential?", a:"Connect to a VPN after joining the hotspot", w:["Use Wi-Fi Enhanced Open","Trust it because the splash page is HTTPS","Send files by email since the splash page is secure"], why:"He can't change the hotel's network settings, but he controls his own VPN." },
+  { d:"2", obj:"2.4", q:"An attacker used a rogue WAP near the building to collect client information. Which network attack?", a:"On-path", w:["Wireless","Amplified","Reflected"], why:"Intercepting traffic in transit = on-path. Wireless attacks exploit wireless weaknesses themselves." },
+  { d:"2", obj:"2.4", q:"A server with standardized configs is unexpectedly using an older encryption protocol. MOST likely attack?", a:"Downgrade", w:["Wireless","On-path","Brute force"], why:"Forced onto weaker crypto = downgrade." },
+  { d:"2", obj:"2.4", q:"A workstation shows odd command-line tasks and unauthorized WMI queries, but antivirus finds no files. Malware type?", a:"Fileless malware", w:["Rootkit","Ransomware","Adware"], why:"Runs in memory using built-in tools like WMI and PowerShell." },
+  { d:"2", obj:"2.4", q:"Web logs show requests like ?id=100 OR 1=1 ORDER BY total and an UPDATE ... SET credit_limit statement. Attack?", a:"SQL injection", w:["On-path","XSS","Directory traversal"], why:"SQL keywords in parameters = SQLi." },
+  { d:"2", obj:"2.4", q:"Form submissions contain <object>, <style>@import javascript:, and <base href> tags. Attack?", a:"Cross-site scripting (XSS)", w:["SQL injection","CSRF","Command injection"], why:"HTML/script tags injected into user input = XSS." },
+  { d:"2", obj:"2.5", q:"A hardened database is breached through a flaw in a third-party plugin. What step would have prevented it?", a:"Regular patching of third-party software", w:["MFA for all DB users","Host-based firewall monitoring","Putting the DB in a DMZ"], why:"MFA doesn't fix a software vulnerability." },
+  { d:"2", obj:"2.5", q:"Which mitigation replaces factory-set usernames and passwords on devices?", a:"Default credential management", w:["Multi-factor authentication","Role-based access control","Encryption"], why:"The name matches the problem." },
+  { d:"2", obj:"2.5", q:"Which port should be disabled or monitored to prevent unauthorized VoIP signaling and toll fraud?", a:"5060", w:["161","110","139"], why:"SIP = 5060. SNMP = 161." },
+  // ---------- Domain 3 ----------
+  { d:"3", obj:"3.1", q:"A bank keeps critical apps up during maintenance and minor failures. What concern does this high-availability design add?", a:"Vulnerabilities in redundancy and failover mechanisms", w:["Vulnerabilities of all cloud-native environments","Hard-coded software limitations","Limits on role-based permissions"], why:"The failover parts HA adds are themselves attack surface." },
+  { d:"3", obj:"3.1", q:"A power plant centrally controls machinery and sensor feedback. Which security concern is MOST associated with such systems?", a:"Limited security update capability", w:["Runtime efficiency constraints","Constrained memory use","Optimization for containers"], why:"ICS/SCADA systems rarely get patched.", n:2 },
+  { d:"3", obj:"3.1", q:"A water plant uses in-house SCADA. MOST concerning vulnerability?", a:"Legacy protocols without encryption", w:["Frequent patching","Over-reliance on sandboxing","Speed and productivity issues"], why:"Frequent patching would be good. Old cleartext protocols are the risk." },
+  { d:"3", obj:"3.1", q:"A company splits a monolith into microservices. Which security implication matters MOST?", a:"Granular access control requirements", w:["Reduced monitoring endpoints","Consolidated data storage","Single deployment cadence"], why:"More services means more endpoints and more permissions to manage." },
+  { d:"3", obj:"3.1", q:"A system is isolated from ALL external network connections and reached from a dedicated workstation. Model?", a:"Air-gapped", w:["Physical isolation","Logical segmentation","Serverless"], why:"Physical isolation = locks and barriers; air gap = no network." },
+  { d:"3", obj:"3.1", q:"A factory in a floodplain buys extra flood insurance. Risk response?", a:"Risk transference", w:["Risk mitigation","Risk avoidance","Risk acceptance"], why:"Insurance shifts the cost to someone else.", n:2 },
+  { d:"3", obj:"3.1", q:"What is MOST crucial about compute considerations when comparing architecture models?", a:"Resource allocation and scalability", w:["Deployment frequency of instances","Cost-effectiveness","Geographical distribution"], why:"Compute = allocate and scale resources efficiently." },
+  { d:"3", obj:"3.1", q:"Developers deploy code while the provider automatically manages execution, scaling and networking. Model?", a:"Serverless", w:["Air-gapped network","Virtualization","IaC"], why:"'No concern for infrastructure' = serverless." },
+  { d:"3", obj:"3.1", q:"Infrastructure is set up and overseen with scripts and automated tools rather than by hand. Approach?", a:"IaC", w:["Serverless architecture","Microservices","Air-gapped network"], why:"Infrastructure defined in code." },
+  { d:"3", obj:"3.1", q:"Which consideration refers to a system giving timely and accurate feedback to user requests?", a:"Responsiveness", w:["Performance","Scalability","Availability"], why:"Performance is the broad umbrella; this is specifically responsiveness.", n:2 },
+  { d:"3", obj:"3.1", q:"The ability of a component to maintain its function under adverse conditions is called what?", a:"Resilience", w:["Availability","Scalability","Responsiveness"], why:"Availability = up when needed. Resilience = copes with trouble." },
+  { d:"3", obj:"3.1", q:"Which technology creates multiple isolated environments on a single physical device?", a:"Virtualization", w:["Containerization","SDN","ICS"], why:"Dion's framing: VMs are whole isolated environments; containers isolate apps." },
+  { d:"3", obj:"3.2", q:"Multiple WAPs on different bands are being placed. Which principle should guide placement and configuration?", a:"Minimize co-channel and adjacent-channel interference", w:["Use unique SSIDs","Operate only on 5 GHz","Add more access points"], why:"Channel planning is the placement principle." },
+  { d:"3", obj:"3.2", q:"Devices must be regulated by their physical (MAC) addresses. Which feature?", a:"Port security", w:["TLS","Jump server","Fail-open"], why:"Switch port security filters by MAC." },
+  { d:"3", obj:"3.2", q:"A device must analyze traffic in real time without interfering with its flow. Which?", a:"Network appliance sensor", w:["Proxy server","VLAN","Load balancer"], why:"Sensors are passive, listen-only." },
+  { d:"3", obj:"3.2", q:"An appliance filters on URLs, HTTP headers and application functions. OSI layer?", a:"Layer 7", w:["Layer 3","Layer 6","Layer 5"], why:"URLs and headers are application data." },
+  { d:"3", obj:"3.2", q:"A single solution provides intrusion prevention, gateway antivirus and VPN. What is it?", a:"UTM", w:["Firewall","IPS","VPN gateway"], why:"Many functions in one box = UTM." },
+  { d:"3", obj:"3.2", q:"A store faces malware, DoS, intrusion and on-path attacks and wants ONE solution. BEST?", a:"UTM", w:["802.1X","IPS","Proxy server"], why:"'One solution to many problems' = UTM." },
+  { d:"3", obj:"3.2", q:"To detect and respond to a suspicious late-night traffic surge, rely MOST on what?", a:"IDS/IPS", w:["Firewall logs","DLP system","Network sensors"], why:"IDS/IPS analyzes behavior and can alert or block." },
+  { d:"3", obj:"3.2", q:"Devices receive requests from unidentified sources and need secure, private communication. MOST secure method?", a:"TLS", w:["NGFW","Jump servers","Sensors"], why:"Confidentiality in transit = encryption protocol." },
+  { d:"3", obj:"3.2", q:"Admins must manage multiple servers without connecting to them directly. BEST?", a:"Jump server", w:["Proxy server","Firewall","VPN"], why:"A jump host is a controlled admin gateway." },
+  { d:"3", obj:"3.2", q:"Remote users must be authenticated using multiple possible methods. Protocol?", a:"EAP", w:["IPSec","SD-WAN","ICMP"], why:"EAP is the framework for many auth methods." },
+  { d:"3", obj:"3.2", q:"Which improvement does an NGFW provide over a traditional stateful firewall?", a:"Deep packet inspection with signature-based intrusion detection", w:["Multiple functions: firewall, IPS, antivirus and more","Focus on HTTP attacks like XSS and SQLi","Awareness of connection states on layer 4"], why:"'Many functions' = UTM; HTTP focus = WAF; connection state = already stateful.", n:2 },
+  { d:"3", obj:"3.2", q:"Which control evaluates a device's compliance before allowing it onto network resources?", a:"NAC", w:["Firewall","IDS","VPN"], why:"You swapped NAC and firewall on the PBQ. A firewall filters traffic by rules; NAC checks the device." },
+  { d:"3", obj:"3.3", q:"Highly confidential contracts stored on company servers must be protected. BEST method?", a:"Data-at-rest encryption", w:["RBAC","Password protection","VPNs"], why:"RBAC leaves the data readable if storage is breached." },
+  { d:"3", obj:"3.3", q:"Marketing needs a dataset with the same structure as customer card data but must not see real values. BEST?", a:"Data obfuscation", w:["Data encryption","RBAC","IDS"], why:"Encryption can be reversed to real data." },
+  { d:"3", obj:"3.3", q:"Card numbers must stay protected while actively processed in memory. MOST effective?", a:"Homomorphic encryption", w:["DLP","FDE","VPN"], why:"Compute on encrypted data = data in use protected." },
+  { d:"3", obj:"3.3", q:"PII goes to a third-party analytics firm; it must stay confidential but keep its structure. MOST appropriate?", a:"Data masking", w:["Data encryption","Data deduplication","Checksum validation"], why:"Masking keeps the format usable.", n:2 },
+  { d:"3", obj:"3.3", q:"Sensitive data is substituted with non-sensitive representations; the mapping lives in a separate database. Technique?", a:"Tokenization", w:["Obfuscation","Hashing","Non-human readable"], why:"Separate token vault = tokenization." },
+  { d:"3", obj:"3.3", q:"How does tokenization protect sensitive data?", a:"Substitutes non-sensitive placeholders", w:["Converts data into a fixed-size hash","Segments the network","Defines data sovereignty rules"], why:"Tokens are lookups, not math transforms." },
+  { d:"3", obj:"3.3", q:"Which data is 'sensitive' under GDPR?", a:"Religious beliefs and political opinions", w:["Favorite movies, books and hobbies","Online purchase history","Employment history and salary"], why:"GDPR special categories." },
+  { d:"3", obj:"3.3", q:"Which data type is crucial to operations and would cause significant impact if lost?", a:"Critical", w:["Data at rest","Regulated","General data"], why:"Data at rest is a state, not a classification." },
+  { d:"3", obj:"3.4", q:"A mostly empty backup building now has some equipment moved in. What site type is it?", a:"Warm site", w:["Cold site","Hot site","Environmentally friendly site"], why:"Some equipment, data still to load = warm." },
+  { d:"3", obj:"3.4", q:"To restore systems with the fewest backup sets, which type would most likely be used?", a:"Full backups", w:["Snapshots","Incremental backups","Differential backups"], why:"One full set restores everything." },
+  { d:"3", obj:"3.4", q:"Each website feature runs on its own server so one failure only loses one feature. What is this?", a:"Clustering", w:["Load balancing","Parallel processing","Hot site"], why:"Load-balanced servers all do the same job." },
+  { d:"3", obj:"3.4", q:"Two evenly matched teams compete: one defends, one attacks. Exercise type?", a:"Simulation", w:["Tabletop exercise","Functional exercise","Failover"], why:"Tabletop = discussion only." },
+  { d:"3", obj:"3.4", q:"Main reason for multi-cloud to minimize dependency on one vendor?", a:"Platform diversity", w:["Load balancing","Parallel processing","Data security"], why:"Different platforms = no single point of failure." },
+  { d:"3", obj:"3.4", q:"Which method captures a system's state at a point in time for quick recovery without a full backup?", a:"Snapshots", w:["Incremental backups","Full backups","Differential backups"], why:"Point in time = snapshot." },
+  { d:"3", obj:"3.4", q:"Which approach duplicates data to a second location in (near) real time?", a:"Replication", w:["Journaling","Snapshots","Differential backups"], why:"Journaling logs changes; replication copies them live." },
+  { d:"3", obj:"3.4", q:"Analyzing current capabilities to ensure infrastructure can meet future workloads is called what?", a:"Capacity planning", w:["Performance tuning","Redundancy implementation","Infrastructure hardening"], why:"Forecasting future needs." },
+  // ---------- Domain 4 ----------
+  { d:"4", obj:"4.1", q:"Which is MOST suitable for securing embedded systems in critical infrastructure (Dion's answer)?", a:"RTOS", w:["Biometric authentication","Antivirus software","Network firewalls"], why:"A purpose-built real-time OS with predictable behavior." },
+  { d:"4", obj:"4.1", q:"Which is a feature of WPA3?", a:"SAE / Diffie-Hellman (Dragonfly) key agreement", w:["A 4-way handshake with a pre-shared key","Encrypts the authentication process using TCP","RC4 stream encryption"], why:"WPA3 also gives per-user encryption on open networks and protected management frames. The PSK 4-way handshake is WPA2." },
+  { d:"4", obj:"4.1", q:"Which should be done FIRST to harden a new web server?", a:"Implement least privilege and patch management", w:["Identify hardware and software approaching end of life","Set up a guest account","Increase storage capacity"], why:"Access and patching first; EOL planning comes later." },
+  { d:"4", obj:"4.1", q:"In the 'establish' phase of a secure baseline, what happens FIRST?", a:"Design the security configurations (encryption, firewall, access controls)", w:["Conduct a vulnerability assessment","Install the latest updates","Set up logging"], why:"Assessment is a later phase that tests the baseline." },
+  { d:"4", obj:"4.1", q:"Remote field teams need secure, reliable, fast, affordable encrypted connectivity. BEST?", a:"Cellular", w:["WEP","Satellite","Bluetooth"], why:"WEP is broken, Bluetooth is short range, satellite is slow and expensive." },
+  { d:"4", obj:"4.2", q:"During an outage, IT couldn't find asset warranty status, location or owner. Which process would help?", a:"Inventory management", w:["Asset classification","Sanitization","Ownership identification"], why:"Inventory is the detailed record." },
+  { d:"4", obj:"4.2", q:"After an incident, an admin counts all devices and software to confirm there are no unauthorized assets. Activity?", a:"Enumeration", w:["Monitoring","Classification","Disposal"], why:"Systematic counting/listing = enumeration." },
+  { d:"4", obj:"4.3", q:"What must an external pen test firm do before concluding the engagement?", a:"Deliver a detailed penetration test report", w:["Apply patches for what it found","Train the client's employees","Deploy a firewall"], why:"Testers report; the client remediates." },
+  { d:"4", obj:"4.3", q:"Which CVSS metric describes whether an exploit needs physical access or works over a network?", a:"Attack Vector (AV)", w:["Scope (S)","User Interaction (UI)","Attack Complexity (AC)"], why:"AV = network, adjacent, local or physical." },
+  { d:"4", obj:"4.3", q:"Which entities exchange threat and vulnerability information among different organizations?", a:"Information-sharing organizations (ISACs)", w:["SOCs","Bug bounty programs","Dynamic analysis"], why:"A SOC serves one organization." },
+  { d:"4", obj:"4.3", q:"Why does segmentation matter in vulnerability management?", a:"It isolates assets to contain breaches", w:["It divides the workforce into departments","It ranks vulnerabilities by severity","It backs up each part of the network"], why:"Limits lateral movement." },
+  { d:"4", obj:"4.4", q:"What happens when a file is quarantined during alert response?", a:"Access to the file is denied", w:["It is forwarded to a threat intel platform","It is permanently deleted","All files in the directory are restricted"], why:"Isolate it; don't delete or forward." },
+  { d:"4", obj:"4.4", q:"Primary purpose of archiving for security monitoring?", a:"Historical insight for future investigations", w:["External backup in case of crashes","Compliance without long-term storage","Real-time threat mitigation"], why:"Archives preserve logs and alerts." },
+  { d:"4", obj:"4.4", q:"Which is NOT true about SIEM?", a:"It aids procurement and asset management of software", w:["It can maintain a record of IT equipment","It gives real-time analysis of alerts","It aggregates logs into a unified view"], why:"SIEM collects and correlates logs; it doesn't buy software." },
+  { d:"4", obj:"4.4", q:"Which is NOT true about SCAP?", a:"It encrypts all data before storage", w:["It provides a common language for security content","It automates vulnerability detection and config management","It supports compliance with standards"], why:"SCAP never encrypts." },
+  { d:"4", obj:"4.4", q:"Which BEST explains DLP's importance?", a:"Prevents unauthorized transmission of data", w:["Blocks malicious software and viruses","Detects and prevents DDoS attacks","Encrypts data in databases and cloud"], why:"DLP = data leaving, not malware." },
+  { d:"4", obj:"4.4", q:"Which is NOT true about DLP?", a:"It prevents malicious actors from accessing systems", w:["It can detect breaches and take preventive action","It prevents unintentional distribution of data","It enforces data security policies"], why:"DLP protects data movement, not system access.", n:2 },
+  { d:"4", obj:"4.4", q:"Which is NOT true about log aggregation?", a:"It increases the complexity of managing logs", w:["It aids regulatory compliance","It consolidates logs for easier analysis","It helps detect unusual activity"], why:"Aggregation simplifies." },
+  { d:"4", obj:"4.4", q:"Which BEST explains the importance of antivirus?", a:"Identifies and removes malicious software", w:["Only stops worms and viruses","Detects unknown vulnerabilities","Monitors network traffic for breaches"], why:"AV covers many malware types by known signatures." },
+  { d:"4", obj:"4.4", q:"Which BEST explains the importance of vulnerability scanners?", a:"Detect and assess security weaknesses in applications and systems", w:["Continuously monitor network traffic for breaches","Detect and mitigate problems on many devices","Monitor user activity for suspicious behavior"], why:"Scanners find weaknesses. They don't fix them, run continuously, or watch users.", n:4 },
+  { d:"4", obj:"4.5", q:"What is the significance of implementing SPF?", a:"Prevents spoofing by listing servers authorized to send for the domain", w:["Encrypts email in transit","Lets users digitally sign email","Quarantines suspicious email"], why:"Signing = DKIM. None of them encrypt.", n:2 },
+  { d:"4", obj:"4.5", q:"What is the significance of implementing DMARC?", a:"Prevents spoofing and phishing by verifying the sender's domain", w:["Encrypts email in transit","Scans and quarantines attachments","Tracks delivery status"], why:"DMARC = policy + reporting on SPF/DKIM.", n:2 },
+  { d:"4", obj:"4.5", q:"Web addresses must be checked in real time so employees only reach safe sites. MOST effective?", a:"URL scanning", w:["Network firewall","VPN","More bandwidth"], why:"Firewalls filter IPs and ports." },
+  { d:"4", obj:"4.5", q:"Filter deny-listed URLs, apply time-based rules and do threat analysis on user web traffic. MOST effective?", a:"Secure web gateway (SWG)", w:["NGFW only","Content filter","Standalone DLP"], why:"SWG is built for user web traffic." },
+  { d:"4", obj:"4.5", q:"Consistent web filtering for employees who travel or work remotely. MOST effective?", a:"Agent-based web filter", w:["VPN for remote users","Require a specific browser","Strict outbound firewall rules"], why:"The agent enforces policy wherever the device goes.", n:2 },
+  { d:"4", obj:"4.5", q:"Restrict Linux processes to minimum privileges and define their behavior. Which feature?", a:"SELinux", w:["chroot","SSH key authentication","Filesystem quotas"], why:"chroot only limits the file view." },
+  { d:"4", obj:"4.5", q:"Sophisticated attacks bypass signature detection on the IPS. MOST effective change?", a:"Add behavior-based analysis", w:["Replace the IPS with a firewall","More frequent signature updates","Lower the alert threshold"], why:"Anomaly detection catches signatureless attacks." },
+  { d:"4", obj:"4.6", q:"Standard that lets an IdP pass authentication to SPs for SSO across cloud apps?", a:"SAML", w:["OAuth","Kerberos","LDAP"], why:"OAuth = authorization for APIs." },
+  { d:"4", obj:"4.6", q:"Users unlock their phone to prove identity; no password, based on public key crypto. What is it?", a:"Passkey", w:["Biometric authentication","OTP","2FA"], why:"The biometric just unlocks the device; the passkey is the credential." },
+  { d:"4", obj:"4.6", q:"Many employees use 'Prime2023'. MOST effective improvement?", a:"Require longer passwords", w:["Change passwords monthly","Switch hashing algorithms","Add a CAPTCHA"], why:"Length beats rotation." },
+  { d:"4", obj:"4.6", q:"A junior dev can use dev but not production; only seniors change prod. Which principle?", a:"Least privilege", w:["RBAC","DAC","MAC"], why:"The principle is minimum access; RBAC is a mechanism." },
+  { d:"4", obj:"4.6", q:"Many separate logins cause forgotten-password tickets and unsafe habits. BEST fix?", a:"Company-approved password manager", w:["Stateful firewall","Longer password expiration","Have employees write passwords down"], why:"Only option that addresses password fatigue." },
+  { d:"4", obj:"4.6", q:"Purpose of attestation in IAM?", a:"Data owners periodically review and confirm users' access rights", w:["Employees sign to accept security policies","Biometric login to sensitive data","External regulatory audit"], why:"Attestation = access recertification." },
+  { d:"4", obj:"4.6", q:"Implement time-of-day access restrictions across time zones. BEST?", a:"SSO + RBAC with time-based policies", w:["Complex passwords with daily rotation by time zone","2FA with user-chosen hours","Temporary accounts with fixed hours"], why:"Centralized, policy-driven control." },
+  { d:"4", obj:"4.6", q:"Which authentication factor is a token app like Duo or Google Authenticator?", a:"Possession (something you have)", w:["Knowledge (something you know)","Inherence (something you are)","Location (somewhere you are)"], why:"The code lives on a device you hold." },
+  { d:"4", obj:"4.6", q:"Which authentication factor is voice recognition?", a:"Inherence (something you are)", w:["Possession (something you have)","Knowledge (something you know)","Behavior (something you do)"], why:"Biometric trait = inherence." },
+  { d:"4", obj:"4.7", q:"MOST crucial for the ongoing supportability of a new security automation tool?", a:"Availability of skilled personnel", w:["Integration capabilities","Popularity in the market","Vendor's market presence"], why:"Someone has to run and maintain it." },
+  { d:"4", obj:"4.7", q:"Which BEST explains the importance of APIs for security?", a:"Enable automation and integration of security tools", w:["Automate user authentication","Real-time traffic monitoring","Generate password policies"], why:"APIs connect tools." },
+  { d:"4", obj:"4.7", q:"Importance of automating user provisioning?", a:"Timely access to resources and better productivity", w:["It reduces overall security","It replaces authentication","It removes all human intervention"], why:"Automation standardizes and speeds access." },
+  { d:"4", obj:"4.7", q:"Importance of security groups?", a:"Centralized management of user access and permissions", w:["Integrate security tools into a unified defense","Automate software deployments","Create encrypted backups"], why:"Groups = permissions assigned in bulk.", n:2 },
+  { d:"4", obj:"4.7", q:"Importance of the 'workforce multiplier'?", a:"Scales security capability using humans + automation", w:["Replaces manual tasks with automation","Reduces the need for skilled staff","Deploys virtual firewalls quickly"], why:"It amplifies people rather than replacing them." },
+  { d:"4", obj:"4.7", q:"Which is NOT true about technical debt?", a:"It's a measure of the RTO of security systems", w:["Managing it affects automation efficiency","It's the cost of choosing a quick fix","It can raise future maintenance costs"], why:"Technical debt = future cost of shortcuts." },
+  { d:"4", obj:"4.8", q:"Importance of e-discovery in incident response?", a:"Finding electronically stored data to use as evidence", w:["Recognizing threats to prevent incidents","Documenting incident details","Preserving evidence in its original state"], why:"E-discovery = collecting ESI for legal use." },
+  { d:"4", obj:"4.8", q:"Why train employees on the incident response process?", a:"So the team reacts quickly to an incident", w:["To classify incidents and their impact","So incidents never occur","To compensate responders"], why:"Training = readiness and speed." },
+  { d:"4", obj:"4.9", q:"Which is NOT typically found in file metadata?", a:"Users who have accessed the file", w:["The file's creator","Date/time of last modification","File size"], why:"Creator, size and timestamps are in metadata." },
+  // ---------- Domain 5 ----------
+  { d:"5", obj:"5.1", q:"What task is a data processor solely in charge of?", a:"Processing data on behalf of the data controller", w:["Establishing data ownership and access","Managing and controlling access","Physical security of storage"], why:"Ownership belongs to the owner/controller." },
+  { d:"5", obj:"5.1", q:"Best description of the data processor's role?", a:"Processes personal data for controllers and implements security measures", w:["Classifies data and defines access permissions","Sets strategic direction for data","Manages data risk and compliance"], why:"Classifying = owner.", n:2 },
+  { d:"5", obj:"5.1", q:"John configures access to classified client data according to policies another department set. His role?", a:"Data custodian", w:["Data controller","Data owner","Data processor"], why:"Custodian implements; owner sets policy." },
+  { d:"5", obj:"5.1", q:"Best description of the data owner's role?", a:"Ensures data protections, access levels and security measures", w:["Defines purposes and methods of personal data processing under GDPR","Implements encryption at rest and in transit","Recommends ISMS controls"], why:"Defining purposes of processing = controller." },
+  { d:"5", obj:"5.1", q:"Which US law is a 'horizontal' personal data regulation like GDPR?", a:"CCPA", w:["PCI DSS","GLBA","FISMA"], why:"Horizontal = applies across all sectors. GLBA is financial only." },
+  { d:"5", obj:"5.1", q:"Which international standard provides the framework for an ISMS?", a:"ISO/IEC 27001", w:["NIST SP 800-63","ISO/IEC 27002","ISO/IEC 27017"], why:"27002 = control guidance; 27017 = cloud; 800-63 = digital identity." },
+  { d:"5", obj:"5.1", q:"Which structure allows autonomous decision-making in separate departments?", a:"Decentralized governance", w:["Matrix structure","Flat organization","Hierarchical management"], why:"Matrix = multiple reporting lines." },
+  { d:"5", obj:"5.1", q:"Primary purpose of designing a site as security zones?", a:"Maximize access controls for the most secure areas", w:["Simplify the site layout","Reduce security costs","Improve aesthetics"], why:"Zones layer protection." },
+  { d:"5", obj:"5.1", q:"Organizations that enforce data-protection regulations and privacy rights are called what?", a:"Data protection authorities", w:["National cybersecurity agencies","Regulatory agencies","Defense organizations"], why:"DPAs focus on personal data rights." },
+  { d:"5", obj:"5.1", q:"Which US act requires federal agencies to secure systems processing confidential information?", a:"Computer Security Act (1987)", w:["GDPR","GLBA","SOX"], why:"GDPR is EU." },
+  { d:"5", obj:"5.2", q:"The team wants to know how long it takes to repair a system after a disruption. Which measure?", a:"MTTR", w:["RTO","RPO","MTBF"], why:"RTO = max allowed downtime; MTTR = average repair time." },
+  { d:"5", obj:"5.2", q:"Any project with potential loss over $500,000 requires immediate review. What is that figure?", a:"Risk threshold", w:["Risk tolerance","Risk limit","Risk level"], why:"A specific trigger point = threshold." },
+  { d:"5", obj:"5.2", q:"The level of risk a company is willing to accept to achieve its goals?", a:"Risk appetite", w:["Risk acceptance","Risk tolerance","Risk deterrence"], why:"Acceptance is a decision on one specific risk." },
+  { d:"5", obj:"5.2", q:"'7% chance of hardware failure next year based on past data' is which measurement?", a:"Probability", w:["Likelihood","Severity ranking","Exposure factor"], why:"A number = probability; low/med/high = likelihood." },
+  { d:"5", obj:"5.2", q:"Which term is the QUALITATIVE frequency of a risk occurring in a period?", a:"Likelihood", w:["Risk frequency","ARO","Probability"], why:"Qualitative = likelihood.", n:2 },
+  { d:"5", obj:"5.2", q:"Detecting and documenting potential threats to inform risk strategy is called what?", a:"Risk identification", w:["Vulnerability assessment","Threat intelligence","Policy review"], why:"A vuln assessment is one tool within it." },
+  { d:"5", obj:"5.2", q:"A comprehensive risk evaluation at one specific moment (e.g., for a new system)?", a:"One-time assessment", w:["Risk identification","Ad hoc","Continuous"], why:"Timing word: one-time vs continuous vs ad hoc." },
+  { d:"5", obj:"5.2", q:"Percentage of an asset's value expected to be lost in one event?", a:"Exposure factor (EF)", w:["SLE","Asset impact","Damage proportion"], why:"SLE is dollars; EF is a percentage." },
+  { d:"5", obj:"5.2", q:"Sarah is accountable for ongoing review and response for a platform's risks. Her role?", a:"Risk owner", w:["Risk assessor","Risk register","Risk indicator"], why:"Ongoing accountability = owner.", n:2 },
+  { d:"5", obj:"5.3", q:"Which document gives a vendor detailed requirements, features and deadlines for a software project?", a:"SOW", w:["SLA","MSA","BPA"], why:"SOW = specific project work." },
+  { d:"5", obj:"5.3", q:"Which agreement outlines specific services with timelines and costs?", a:"SOW", w:["SLA","MOA","MSA"], why:"SLA = service performance levels." },
+  { d:"5", obj:"5.3", q:"Reviewing a vendor's financial stability, reviews and incident history is which part of vendor selection?", a:"Due diligence", w:["Supply chain analysis","Service-level agreement","NDA"], why:"Vetting the vendor itself." },
+  { d:"5", obj:"5.3", q:"What must be set up before pen testing a vendor's systems so it runs smoothly?", a:"Rules of engagement", w:["MOU","SLA","NDA"], why:"ROE = scope, limits, rules of the test.", n:2 },
+  { d:"5", obj:"5.3", q:"Which agreement defines how two organizations will collaborate on specific projects (Dion's answer)?", a:"MOU", w:["BPA","SLA","MSA"], why:"Dion: MOU = mutual intent to collaborate. BPA = partnership business terms.", n:2 },
+  { d:"5", obj:"5.3", q:"What is NOT typically in a Business Partnership Agreement?", a:"Responsibilities for software updates", w:["Exit strategies","Profit sharing","IP ownership"], why:"Updates belong in an SLA." },
+  { d:"5", obj:"5.3", q:"Primary goal of asking a vendor for evidence of internal audits?", a:"Verify compliance with its own security standards", w:["Assess the external threat landscape","Determine profit margins","Review its client list"], why:"Internal audits check internal controls." },
+  { d:"5", obj:"5.4", q:"A company operating in many countries worries about privacy compliance. Scope of legal implications?", a:"Global", w:["Data localization","National","Local/regional"], why:"Operating internationally = global.", n:2 },
+  { d:"5", obj:"5.4", q:"Carla collects, stores and analyzes data as her supervisor directs. Her role?", a:"Data processor", w:["Data custodian","Data controller","Data subject"], why:"Acting on direction = processor." },
+  { d:"5", obj:"5.4", q:"Primary objective of EXTERNAL compliance reporting?", a:"Report compliance status to the public and stakeholders", w:["Conduct audits","Share with internal management","Get acknowledgment from data subjects"], why:"External = outside audiences." },
+  { d:"5", obj:"5.4", q:"How a country's government regulates how its citizens' data is collected and processed is called what?", a:"National legal implications", w:["GDPR","Consent management","Data encryption"], why:"GDPR is one specific law, not the concept." },
+  { d:"5", obj:"5.5", q:"An internal review verifies controls work, and a senior official signs to confirm it. What is this?", a:"Attestation", w:["Auditing","Penetration testing","Vulnerability scanning"], why:"Signed formal statement = attestation." },
+  { d:"5", obj:"5.5", q:"Purpose of passive reconnaissance?", a:"Gather information without directly engaging the target", w:["Simulate real-world attacks","Test defensive capabilities","Test offensive capabilities"], why:"Passive = no contact." },
+  { d:"5", obj:"5.5", q:"An attacker directly interacts with systems to gather info, possibly alerting the target. Term?", a:"Active reconnaissance", w:["OSINT","Passive reconnaissance","Network enumeration"], why:"OSINT is passive." },
+  { d:"5", obj:"5.5", q:"Purpose of the audit committee?", a:"Oversee internal controls and financial reporting", w:["Complete external audits","Approve the CEO's audits","Confirm the CEO's hunches"], why:"The committee is internal and independent." },
+  { d:"5", obj:"5.5", q:"External evaluation by a government agency to ensure laws are followed?", a:"Regulatory examination", w:["Independent third-party audit","Attestation","Assessment"], why:"Government = regulatory exam." },
+  { d:"5", obj:"5.6", q:"A monthly report of log trends, threats and recommendations for senior management?", a:"Recurring report", w:["Threat intelligence briefing","Incident report","Policy review"], why:"Fixed schedule = recurring." }
+];
+
+// Confusion sets: terms you mixed up, side by side. [term, definition, tell]
+const VOCAB_SETS = [
+  { name: "Vendor agreements", obj: "5.3", terms: [
+    ["SOW (statement of work)", "Specific tasks, deliverables, timeline and cost for one project.", "\"features, deadline, cost\""],
+    ["SLA (service-level agreement)", "Measurable service levels for an ongoing service: uptime, response times.", "\"performance metrics\""],
+    ["MSA (master service agreement)", "Umbrella terms for future engagements; individual SOWs hang off it.", "\"governs multiple future projects\""],
+    ["MOU (memorandum of understanding)", "Mutual intent to collaborate; usually not legally binding.", "\"intent / how we'll work together\""],
+    ["MOA (memorandum of agreement)", "More formal than an MOU; defines each party's responsibilities.", "\"agreed responsibilities\""],
+    ["BPA (business partnership agreement)", "Partnership terms: profit sharing, IP ownership, exit strategy.", "\"partners, profits\""],
+    ["NDA (non-disclosure agreement)", "Keeps shared information confidential.", "\"confidential\""],
+    ["ROE (rules of engagement)", "Scope, limits and rules for a pen test or assessment.", "\"before the pen test\""]
+  ]},
+  { name: "Data roles", obj: "5.1 / 5.4", terms: [
+    ["Data owner", "Senior person accountable for the data; sets classification and access policy.", "\"accountable, sets protections\""],
+    ["Data controller", "Decides WHY and HOW personal data is processed (GDPR term).", "\"purposes and means of processing\""],
+    ["Data processor", "Processes personal data on the controller's behalf and instructions.", "\"at the direction of\""],
+    ["Data custodian", "Implements and enforces the owner's rules day to day: permissions, backups, storage.", "\"configures access per policy\""],
+    ["Data steward", "Keeps data quality and metadata correct.", "\"quality, labeling\""],
+    ["Data subject", "The person the personal data is about.", "\"the individual\""]
+  ]},
+  { name: "Risk appetite words", obj: "5.2", terms: [
+    ["Risk appetite", "Amount of risk the org is willing to pursue to meet its goals.", "\"to achieve goals\""],
+    ["Risk tolerance", "Acceptable deviation from the appetite; what the org can withstand.", "\"how much it can withstand\""],
+    ["Risk threshold", "Specific point that triggers action.", "\"over $500K requires review\""],
+    ["Risk acceptance", "Decision to live with one specific risk.", "\"no action on this risk\""],
+    ["Risk owner", "Person accountable for managing a given risk.", "\"responsible for ongoing management\""],
+    ["Risk register", "The document or tool that tracks risks.", "\"list / log of risks\""],
+    ["Key risk indicator", "A metric that signals rising risk.", "\"metric to monitor\""]
+  ]},
+  { name: "Risk analysis numbers", obj: "5.2", terms: [
+    ["Likelihood", "Qualitative chance: low / medium / high.", "\"qualitative\""],
+    ["Probability", "Quantitative chance as a number or %.", "\"7% chance\""],
+    ["EF (exposure factor)", "% of asset value lost in one event.", "\"percentage lost\""],
+    ["SLE (single loss expectancy)", "Asset value x EF, in dollars.", "\"cost of one event\""],
+    ["ARO (annualized rate of occurrence)", "How many times per year it happens.", "\"times per year\""],
+    ["ALE (annualized loss expectancy)", "SLE x ARO.", "\"yearly cost\""],
+    ["One-time vs continuous vs ad hoc", "Single point-in-time evaluation / ongoing / as-needed.", "\"at a specific moment\" = one-time"]
+  ]},
+  { name: "Recovery metrics", obj: "5.2", terms: [
+    ["RTO (recovery time objective)", "Max acceptable downtime before operations must be restored.", "\"how long can we be down\""],
+    ["RPO (recovery point objective)", "Max acceptable data loss, measured in time.", "\"how much data can we lose\""],
+    ["MTTR (mean time to repair)", "Average time to repair after a failure.", "\"time to repair\""],
+    ["MTBF (mean time between failures)", "Average run time between failures (reliability).", "\"time between\""]
+  ]},
+  { name: "Zero Trust components", obj: "1.2", terms: [
+    ["Control plane", "Where access decisions and policies live.", "\"decides / policy\""],
+    ["Data plane", "Where the subject's traffic actually flows once approved.", "\"transmits data after approval\""],
+    ["Policy engine", "Makes the grant or deny decision.", "\"decides\""],
+    ["Policy administrator", "Defines and manages policies; tells the PEP to open or close a session.", "\"defines and manages policies\""],
+    ["Policy enforcement point (PEP)", "Enforces the decision in the data path.", "\"enforces\""],
+    ["Adaptive identity", "Authentication that changes with context: location, device, behavior.", "\"context-based\""],
+    ["Policy-driven access control", "Access set by organizational policy and roles, in the control plane.", "\"ZT term for role/policy access\""]
+  ]},
+  { name: "Certificates & keys", obj: "1.4", terms: [
+    ["CSR", "A request sent to a CA; not a certificate.", "\"request\""],
+    ["Self-signed certificate", "Signed with its own private key; internal and testing use.", "\"issued by itself\""],
+    ["Third-party certificate", "Signed by a trusted external CA.", "\"recognized external authority\""],
+    ["Wildcard certificate", "*.domain.com covers all subdomains one level down.", "\"multiple subdomains\""],
+    ["SAN certificate", "Lists several specific names or domains.", "\"specific different names\""],
+    ["Root certificate", "Top of the chain; validates the CAs below it.", "\"top-level\""],
+    ["Public vs private key", "Encrypt TO someone with their public key. Sign with your private key.", "\"only X can decrypt\" = X's public key"]
+  ]},
+  { name: "Protecting data but keeping it usable", obj: "3.3", terms: [
+    ["Data masking", "Replaces values with realistic fakes but keeps the format.", "\"keep structure for analysis/testing\""],
+    ["Tokenization", "Swaps data for a token; the real value lives in a separate secure vault.", "\"separate database\""],
+    ["Obfuscation", "Umbrella term for making data unreadable while keeping it workable.", "\"similar structure, not real data\""],
+    ["Encryption", "Reversible with a key; hides everything.", "wrong when they need usable structure"],
+    ["Hashing", "One-way, fixed-length output; integrity and password storage.", "\"fixed-size value\""],
+    ["Homomorphic encryption", "Compute on data while it stays encrypted.", "\"data in use / in memory\""],
+    ["Data at rest / in transit / in use", "Stored / moving / being processed in memory.", "states, not classifications"]
+  ]},
+  { name: "Architecture words", obj: "3.1", terms: [
+    ["Resilience", "Keeps functioning under adverse conditions.", "\"maintain function under stress\""],
+    ["Availability", "Up and accessible when needed.", "\"uptime\""],
+    ["Responsiveness", "Timely, accurate feedback to requests.", "\"timely feedback\""],
+    ["Scalability", "Handles growing or shrinking load.", "\"growth\""],
+    ["IaC", "Infrastructure defined and managed by code and scripts.", "\"scripts instead of hands-on\""],
+    ["Serverless", "Provider runs execution, scaling and networking; you ship code.", "\"no concern for infrastructure\""],
+    ["Air-gapped", "No network connection to outside at all.", "\"isolated from any external network\""],
+    ["Microservices", "App split into small independent services; more endpoints and permissions.", "\"granular access control\""],
+    ["ICS / SCADA concerns", "Hard to patch, legacy unencrypted protocols.", "\"power / water plant\""]
+  ]},
+  { name: "Resilience & recovery", obj: "3.4", terms: [
+    ["Cold / warm / hot site", "Empty / some equipment, load data / fully ready and synced.", "\"equipment added\" = warm"],
+    ["Full / incremental / differential", "Everything / changes since the last backup / changes since the last full.", "fewest sets = full"],
+    ["Snapshot", "Point-in-time capture of state.", "\"at a specific point in time\""],
+    ["Replication", "Real-time or near-real-time copy to another location.", "\"real-time duplication\""],
+    ["Journaling", "Logs every change for replay.", "\"records transactions\""],
+    ["Clustering vs load balancing", "Servers with distinct roles in one node vs. same job spread over many.", "\"each feature its own server\" = clustering"],
+    ["Platform diversity", "Multiple vendors or platforms to avoid a single point of failure.", "\"multi-cloud\""],
+    ["Capacity planning", "Forecast future resource needs from current capability.", "\"future workload\""],
+    ["Tabletop vs simulation vs functional", "Discussion only / teams vs each other / live operational response.", "\"red vs blue\" = simulation"]
+  ]},
+  { name: "Network appliances", obj: "3.2 / 4.5", terms: [
+    ["UTM", "Many security functions in one box.", "\"one solution, many problems\""],
+    ["NGFW", "App awareness + DPI/IPS + integration with other tools.", "\"application awareness\""],
+    ["WAF", "Protects web apps from XSS, SQLi and other HTTP attacks.", "\"HTTP traffic\""],
+    ["IDS / IPS", "Detects (and can block) malicious traffic.", "\"detect and respond\""],
+    ["Network sensor", "Passive, listen-only monitoring.", "\"without disrupting flow\""],
+    ["Jump server", "Hardened gateway for admin access to other servers.", "\"manage servers without direct connection\""],
+    ["Proxy / SWG", "Intermediary for user web requests; SWG adds threat analysis, DLP, CASB.", "\"user web traffic\""],
+    ["Agent-based web filter", "Filter installed on the device; works anywhere.", "\"remote / traveling users\""],
+    ["Port security", "Switch feature restricting connections by MAC.", "\"physical addresses\""],
+    ["NAC / 802.1X", "Checks device identity and compliance before granting network access.", "\"compliance policies\""],
+    ["EAP", "Authentication framework supporting many methods.", "\"multiple authentication methods\""],
+    ["SELinux vs chroot", "Mandatory access policy on processes vs a restricted file view.", "\"minimum privileges for processes\""]
+  ]},
+  { name: "Email authentication", obj: "2.2 / 4.5", terms: [
+    ["SPF", "DNS record listing which servers may send for the domain.", "\"authorized mail servers\""],
+    ["DKIM", "Digital signature proving the message came from the domain unaltered.", "\"signature\""],
+    ["DMARC", "Policy (none / quarantine / reject) + reporting, built on SPF + DKIM.", "\"reporting\""],
+    ["None of them", "…encrypt email. That's TLS / S/MIME.", "\"encrypts\" = wrong answer"]
+  ]},
+  { name: "Control categories & types", obj: "1.1", terms: [
+    ["Technical", "Implemented in hardware or software: MFA, firewall, encryption, honeypot.", "software/hardware"],
+    ["Managerial", "Oversight and planning: policies, risk assessments, IR plans.", "policies and plans"],
+    ["Operational", "Carried out by people daily: log review, training, backups, guards' procedures.", "people doing tasks"],
+    ["Physical", "Protects physical space: locks, fences, cameras, guards.", "facility"],
+    ["Preventive / Detective / Corrective", "Stops it / finds it / fixes it after.", ""],
+    ["Deterrent / Directive / Compensating", "Discourages / tells people what to do / substitutes for a missing control.", "badges on display = deterrent"]
+  ]},
+  { name: "Deception", obj: "1.2", terms: [
+    ["Honeypot", "One decoy system.", "single server"],
+    ["Honeynet", "A network of decoys.", "multiple instances"],
+    ["Honeyfile", "A decoy document.", "\"merger_plans.docx\""],
+    ["Honeytoken", "Fake data: record, credential, API key.", "fake record or credential"]
+  ]},
+  { name: "Social engineering", obj: "2.2", terms: [
+    ["Phishing", "Broad, generic email lure.", "mass"],
+    ["Spear phishing", "Targeted at a specific group with specific details.", "\"references a recent project\""],
+    ["Whaling", "Targets executives.", "CFO / CEO"],
+    ["BEC", "Fraud to get money or data sent: fake invoices, changed bank details.", "\"new bank account\""],
+    ["Vishing / smishing", "Voice / SMS phishing.", "channel"],
+    ["Impersonation", "Pretending to be a specific trusted person.", "\"claiming to be Enrique from IT\""],
+    ["Pretexting", "The made-up story used to set up the attack.", "the story, not the attack"],
+    ["Watering hole", "Compromise a site the targets visit.", "\"industry site they regularly read\""]
+  ]},
+  { name: "Threat actors & motives", obj: "2.1", terms: [
+    ["Shadow IT", "Unsanctioned tech used for convenience.", "copies files to personal cloud"],
+    ["Insider threat", "Has legitimate credentials; revenge is a common motive.", "terminated employee"],
+    ["Hacktivist", "Ideology-driven: ethical or political/philosophical.", "exposing overpricing = ethical"],
+    ["Nation-state", "Government-sponsored; espionage, war, political.", "SCADA intel = espionage"],
+    ["Organized crime", "Financial gain: ransomware, fraud.", "demands crypto"],
+    ["Unskilled attacker", "Uses others' tools; chaos or disruption.", "defacement = chaos"]
+  ]},
+  { name: "Attacks & indicators", obj: "2.3 / 2.4", terms: [
+    ["TOCTOU / TOC", "Resource changes between check and use.", "specific form of race condition"],
+    ["XSS vs CSRF", "Script runs in the victim's browser vs forged requests sent as the victim.", "cookies stolen = XSS"],
+    ["On-path", "Intercepts traffic in transit (rogue AP, ARP poisoning).", "rogue WAP"],
+    ["Downgrade", "Forces weaker crypto or protocol.", "\"older encryption protocol\""],
+    ["Concurrent sessions vs impossible travel", "Same account at the same time vs logins too far apart too fast.", "\"simultaneously\""],
+    ["Fileless malware", "Runs in memory with built-in tools (WMI, PowerShell).", "no files on disk"],
+    ["Privilege escalation", "Gaining higher rights than intended.", "\"root-level access\""],
+    ["UEFI vs TPM", "Boot firmware with Secure Boot vs chip that stores keys and measurements.", "\"provides code to boot\" = UEFI"]
+  ]},
+  { name: "Monitoring tools: what they do / don't", obj: "4.4", terms: [
+    ["Vulnerability scanner", "Finds and assesses weaknesses. Doesn't mitigate, doesn't run continuously, doesn't watch traffic or users.", "missed 4 of 4"],
+    ["SIEM", "Collects, aggregates and correlates logs; real-time alerting.", "not procurement"],
+    ["SCAP", "Standard language for automated config and vuln checks and compliance.", "not encryption"],
+    ["DLP", "Stops sensitive data leaving.", "not malware, not system access"],
+    ["Antivirus", "Finds and removes known malware of many types.", "can't find unknown vulnerabilities"],
+    ["Log aggregation", "Centralizes logs; simplifies analysis.", "doesn't add complexity"],
+    ["Archiving", "Keeps historical logs for investigations and compliance.", "not a crash backup"],
+    ["Quarantine", "Isolates a file so no one can access it.", "not deleted, not forwarded"]
+  ]},
+  { name: "Identity & access", obj: "4.6", terms: [
+    ["SAML", "Federated SSO: IdP passes authentication assertions to SPs.", "\"IdP to SP\""],
+    ["OAuth", "Authorization for API access (delegation).", "\"authorize API\""],
+    ["OpenID Connect", "Authentication layer on top of OAuth.", "\"login with Google\""],
+    ["Kerberos", "Ticket-based authentication in Windows domains.", "\"tickets\""],
+    ["Passkey", "Public-key credential unlocked by device unlock; passwordless.", "\"unlock phone, public key\""],
+    ["Attestation (IAM)", "Periodic review and recertification of users' access rights.", "\"data owners review access\""],
+    ["Least privilege vs RBAC", "Principle (minimum access) vs mechanism (roles).", "\"principle\" = least privilege"],
+    ["Factors", "Know (password, PIN) / have (token app) / are (voice, fingerprint) / somewhere (GPS, geofence).", ""]
+  ]},
+  { name: "Audits & assessments", obj: "5.5", terms: [
+    ["Attestation (compliance)", "Formal signed statement that controls are in place.", "\"signed by a senior official\""],
+    ["Internal audit", "The org checks itself against its own standards.", "\"its own standards\""],
+    ["Audit committee", "Internal, independent body overseeing controls and financial reporting.", "internal oversight"],
+    ["Regulatory examination", "Government agency checks legal compliance.", "\"government agency\""],
+    ["Independent third-party audit", "External impartial auditor.", "not government"],
+    ["Active vs passive recon", "Touches the target (scans) vs doesn't (OSINT, public info).", "OSINT = passive"]
+  ]},
+  { name: "Laws & standards", obj: "5.1", terms: [
+    ["GDPR", "EU personal data regulation.", "EU"],
+    ["CCPA", "California horizontal consumer privacy law.", "\"horizontal, like GDPR\""],
+    ["GLBA", "US financial-sector privacy (vertical).", "banks"],
+    ["FISMA", "Security for US federal agency systems.", "federal agencies"],
+    ["Computer Security Act (1987)", "Required federal agencies to create security plans for sensitive systems.", "1987"],
+    ["PCI DSS", "Industry standard for card data; not a law.", "credit cards"],
+    ["ISO/IEC 27001 / 27002 / 27017", "ISMS framework / control guidance / cloud controls.", "framework = 27001"],
+    ["NIST SP 800-63", "Digital identity guidelines.", "identity"]
+  ]}
+];
+
+</script>
+<script>
 (function(){
   const DOMAINS = [
     { key: "1.0 General Security Concepts", short: "1.0 Concepts", weight: 12, color: "#57d38c" },
@@ -184,7 +730,7 @@ const ACRONYM_BANK = [{"a": "2FA", "e": "Two-factor Authentication"}, {"a": "3DE
     { key: "4.0 Security Operations", short: "4.0 Operations", weight: 28, color: "#f2b84b" },
     { key: "5.0 Security Program Management and Oversight", short: "5.0 Governance", weight: 20, color: "#9d8cf2" }
   ];
-  const domainColor = k => (DOMAINS.find(d => d.key === k) || {}).color || "#7d93a3";
+  const domainColor = k => (DOMAINS.find(d => d.key === k) || {}).color || (k === "Firewall Rules" || k === "Ports & Protocols" ? "#f2b84b" : "#7d93a3");
   const domainShort = k => (DOMAINS.find(d => d.key === k) || {}).short || k;
 
   const STORAGE_KEY = "attempt-history";
@@ -278,6 +824,82 @@ const ACRONYM_BANK = [{"a": "2FA", "e": "Two-factor Authentication"}, {"a": "3DE
     });
   }
 
+
+  // ===== Weak-spot (Dion) support =====
+  const DOMAIN_BY_NUM = { "1": DOMAINS[0].key, "2": DOMAINS[1].key, "3": DOMAINS[2].key, "4": DOMAINS[3].key, "5": DOMAINS[4].key };
+  const WEAK_PREFIX = "WEAK:";
+  const PORTS_KEY = "Ports & Protocols";
+  const FIREWALL_KEY = "Firewall Rules";
+  const KNOWN_KEY = "weak-known-cards";
+  const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  const MESSER = "https://www.professormesser.com/security-plus/sy0-701/sy0-701-video/sy0-701-comptia-security-plus-course/";
+
+  function weakQuestion(m){
+    const times = m.n && m.n > 1 ? ` You missed this on ${m.n} different attempts.` : "";
+    return {
+      domain: DOMAIN_BY_NUM[m.d],
+      question: esc(m.q),
+      choices: [m.a].concat(m.w).map(esc),
+      correct: 0,
+      explanation: `<span class="pick-note">On the Dion exam you chose: ${esc(m.w[0])}.${times}</span>${esc(m.why)}`,
+      resource: { label: `SY0-701 objective ${m.obj}`, url: MESSER }
+    };
+  }
+
+  function weakPool(filter){
+    let list = MISS_BANK_RAW;
+    if (filter === "repeat") list = list.filter(m => (m.n || 1) > 1);
+    else if (filter !== "all") list = list.filter(m => m.d === filter);
+    return list.map(weakQuestion);
+  }
+
+  function buildPortQuestions(){
+    const qs = [];
+    PORT_TABLE.forEach(p => {
+      const [svc, port, proto, phrase] = p;
+      const others = shuffle(PORT_TABLE.filter(x => x[1] !== port)).slice(0,3);
+      qs.push({
+        domain: PORTS_KEY,
+        question: `Which port / protocol is used for <b>${esc(svc)}</b> (${esc(phrase)})?`,
+        choices: [`${port} (${proto})`].concat(others.map(o => `${o[1]} (${o[2]})`)).map(esc),
+        correct: 0,
+        explanation: esc(`${svc} = ${port} ${proto}.`),
+        resource: { label: "Ports and protocols reference", url: MESSER }
+      });
+      qs.push({
+        domain: PORTS_KEY,
+        question: `A firewall rule uses port <b>${esc(port)} (${esc(proto)})</b>. Which service is it for?`,
+        choices: [svc].concat(others.map(o => o[0])).map(esc),
+        correct: 0,
+        explanation: esc(`${port} ${proto} = ${svc}: ${phrase}.`),
+        resource: { label: "Ports and protocols reference", url: MESSER }
+      });
+    });
+    const missed = qs.filter((q,i) => PORT_TABLE[Math.floor(i/2)][4]);
+    const rest = qs.filter((q,i) => !PORT_TABLE[Math.floor(i/2)][4]);
+    return shuffle(missed).slice(0,18).concat(shuffle(rest).slice(0,12));
+  }
+
+  function buildFirewallQuestions(){
+    return FIREWALL_DRILLS.map(f => ({
+      domain: FIREWALL_KEY, question: esc(f.q), choices: f.choices.map(esc), correct: 0,
+      explanation: esc(f.why), resource: { label: "Firewall rules (SY0-701 4.5)", url: MESSER }
+    }));
+  }
+
+  function loadKnown(){
+    try { return new Set(JSON.parse(localStorage.getItem(KNOWN_KEY) || "[]")); } catch(e){ return new Set(); }
+  }
+  function saveKnown(set){
+    try { localStorage.setItem(KNOWN_KEY, JSON.stringify(Array.from(set))); } catch(e){}
+  }
+  function allCards(setName){
+    const sets = setName ? VOCAB_SETS.filter(s => s.name === setName) : VOCAB_SETS;
+    const out = [];
+    sets.forEach(s => s.terms.forEach(t => out.push({ set: s.name, obj: s.obj, term: t[0], def: t[1], tell: t[2], id: s.name + "::" + t[0] })));
+    return out;
+  }
+
   function poolForDomain(domainKey){
     const base = QUESTION_BANK.filter(q => q.domain === domainKey);
     if (domainKey === "5.0 Security Program Management and Oversight"){
@@ -301,6 +923,11 @@ const ACRONYM_BANK = [{"a": "2FA", "e": "Two-factor Authentication"}, {"a": "3DE
   }
 
   function buildAttemptQuestions(domainFilter){
+    if (domainFilter && domainFilter.indexOf(WEAK_PREFIX) === 0){
+      return finalizeQuestions(weakPool(domainFilter.slice(WEAK_PREFIX.length)));
+    }
+    if (domainFilter === PORTS_KEY) return finalizeQuestions(buildPortQuestions());
+    if (domainFilter === FIREWALL_KEY) return finalizeQuestions(buildFirewallQuestions());
     if (domainFilter === ACRONYM_DOMAIN_KEY){
       return finalizeQuestions(buildAcronymQuestions(ACRONYM_QUIZ_SIZE));
     }
@@ -370,6 +997,188 @@ const ACRONYM_BANK = [{"a": "2FA", "e": "Two-factor Authentication"}, {"a": "3DE
     return `<div class="domain-meter">${bars}</div><div class="domain-legend">${legend}</div>`;
   }
 
+
+  function tabs(){
+    const t = [["home","Practice"],["analysis","Dion Analysis"],["weak","Weak Spots"]];
+    const cur = (state.view === "flash") ? "weak" : state.view;
+    return `<div class="tabs">${t.map(x => `<button class="tab-btn ${cur===x[0]?"active":""}" data-tab="${x[0]}">${x[1]}</button>`).join("")}</div>`;
+  }
+  function wireTabs(){
+    app.querySelectorAll(".tab-btn").forEach(b => b.addEventListener("click", () => { state.view = b.getAttribute("data-tab"); render(); window.scrollTo(0,0); }));
+  }
+
+  function pctClass(p){ return p >= 80 ? "pct-good" : p >= 65 ? "pct-mid" : "pct-bad"; }
+
+  function renderAnalysis(){
+    const S = DION_SUMMARY;
+    const maxH = 100;
+    const bars = S.attempts.map(a => `<div class="ab"><div class="v ${pctClass(a.pct)}">${a.pct}%</div><div class="bw"><div class="bar" style="height:${a.pct}%"></div></div><div class="l">${a.date}</div></div>`).join("");
+    const domRows = S.domains.map(d => `<tr><td>${d.name}</td><td class="mono">${d.weight}%</td><td class="mono ${pctClass(d.all)}">${d.all}% <span class="muted">(${d.allFrac})</span></td><td class="mono ${pctClass(d.recent)}">${d.recent}%</td><td class="mono">${d.misses}</td></tr>`).join("");
+    const objRows = S.weakObjectives.map(o => `<tr><td class="mono">${o[0]}</td><td>${o[1]}</td><td class="mono">${o[2]}</td></tr>`).join("");
+    const fix = S.fixFirst.map(f => `<li><b>${esc(f[0])}.</b> <span class="muted">${esc(f[1])}</span></li>`).join("");
+    const pbq = S.pbqs.map(p => `<tr><td>${p[0]}</td><td class="mono">${p[1]}</td><td class="muted">${esc(p[2])}</td></tr>`).join("");
+    const fw = S.fwRules.map(r => `<li>${esc(r)}</li>`).join("");
+    const ports = PORT_TABLE.map(p => `<tr class="${p[4]?"hot":""}"><td>${esc(p[0])}${p[4]?'<span class="flag">MISSED</span>':""}</td><td class="mono">${esc(p[1])}</td><td class="mono">${esc(p[2])}</td></tr>`).join("");
+    const pat = S.patterns.map(p => `<li><b>${esc(p[0])}.</b> <span class="muted">${esc(p[1])}</span></li>`).join("");
+
+    app.innerHTML = `
+      ${header()}
+      ${tabs()}
+      <div class="card">
+        <h2>Dion practice exams: where the points are going</h2>
+        <p class="muted">7 attempts, 630 questions, 197 missed. Scores have plateaued around 70% against Dion's 85% bar. Domain 4 costs the most points (biggest exam weight, most misses); Domain 5 has slipped lately.</p>
+        <div class="attempt-bars"><div class="pass-line" style="bottom:${18 + 0.85*80}px"><span>85% Dion bar</span></div>${bars}</div>
+      </div>
+      <div class="card">
+        <h2>Scores by domain</h2>
+        <div class="tbl-wrap"><table class="dt"><tr><th>Domain</th><th>Weight</th><th>All 7</th><th>Last 3</th><th>Misses</th></tr>${domRows}</table></div>
+        <h2 style="margin-top:22px;">Weakest objectives</h2>
+        <div class="tbl-wrap"><table class="dt"><tr><th>Obj</th><th>Topic</th><th>Missed</th></tr>${objRows}</table></div>
+      </div>
+      <div class="card">
+        <h2>Fix these first</h2>
+        <ol class="fix">${fix}</ol>
+        <div style="margin-top:10px;"><button class="btn btn-primary btn-sm" id="go-weak">Open Weak Spots drills &rarr;</button></div>
+      </div>
+      <div class="card">
+        <h2>Firewall rules &amp; ports</h2>
+        <p class="muted">The firewall sim is the one PBQ you've never fully passed (0 of 8). Rules of thumb:</p>
+        <ul class="tight">${fw}</ul>
+        <div class="tbl-wrap"><table class="dt"><tr><th>Service</th><th>Port</th><th>Protocol</th></tr>${ports}</table></div>
+        <div class="btn-row" style="justify-content:flex-start; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-primary btn-sm" data-drill="${FIREWALL_KEY}">Firewall rule drill (${FIREWALL_DRILLS.length})</button>
+          <button class="btn btn-ghost btn-sm" data-drill="${PORTS_KEY}">Port drill (30)</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Performance-based questions</h2>
+        <div class="tbl-wrap"><table class="dt"><tr><th>PBQ</th><th>Not fully right</th><th>What went wrong</th></tr>${pbq}</table></div>
+      </div>
+      <div class="card">
+        <h2>Patterns in how you miss</h2>
+        <ul class="tight">${pat}</ul>
+      </div>
+      <div class="footer-note">Built from Dion Training attempts 1 and 3–8 (Sep 2026). Attempt 2 not included.</div>
+    `;
+    wireTabs();
+    document.getElementById("go-weak").addEventListener("click", () => { state.view = "weak"; render(); window.scrollTo(0,0); });
+    app.querySelectorAll("[data-drill]").forEach(b => b.addEventListener("click", () => startQuiz(b.getAttribute("data-drill"), b.getAttribute("data-drill") + " Drill", false)));
+  }
+
+  function renderWeak(){
+    const known = loadKnown();
+    const cards = allCards();
+    const knownCount = cards.filter(c => known.has(c.id)).length;
+    const cnt = f => MISS_BANK_RAW.filter(f).length;
+    const drills = [
+      ["WEAK:all", "All missed concepts", `${MISS_BANK_RAW.length} questions &middot; your Dion answer shown after each`],
+      ["WEAK:repeat", "Repeat offenders", `${cnt(m => (m.n||1) > 1)} questions you missed on 2+ attempts`],
+      ["WEAK:3", "3.0 Architecture misses", `${cnt(m => m.d==="3")} questions &middot; 61% on Dion`],
+      ["WEAK:4", "4.0 Operations misses", `${cnt(m => m.d==="4")} questions &middot; 66% on Dion`],
+      ["WEAK:5", "5.0 Governance misses", `${cnt(m => m.d==="5")} questions &middot; 67% on Dion`],
+      ["WEAK:1", "1.0 Concepts misses", `${cnt(m => m.d==="1")} questions &middot; 71% on Dion`],
+      ["WEAK:2", "2.0 Threats misses", `${cnt(m => m.d==="2")} questions &middot; 80% on Dion`],
+      [FIREWALL_KEY, "Firewall rule drill", `${FIREWALL_DRILLS.length} rules from the sims you missed`],
+      [PORTS_KEY, "Port drill", "30 questions, weighted toward ports you missed"]
+    ];
+    const drillBtns = drills.map(d => `<button class="mode-btn" data-weak="${d[0]}"><div class="m-title">${d[1]}</div><div class="m-sub">${d[2]}</div></button>`).join("");
+    const sets = VOCAB_SETS.map(s => {
+      const k = s.terms.filter(t => known.has(s.name + "::" + t[0])).length;
+      const rows = s.terms.map(t => `<tr><td><b>${esc(t[0])}</b></td><td class="muted">${esc(t[1])}${t[2] ? `<div class="tell">tell: ${esc(t[2])}</div>` : ""}</td></tr>`).join("");
+      return `<details class="vset"><summary><span>${esc(s.name)}</span><span class="sub">obj ${s.obj} &middot; ${k}/${s.terms.length} known</span></summary>
+        <div class="inner"><div class="tbl-wrap"><table class="dt"><tr><th>Term</th><th>Meaning &amp; tell</th></tr>${rows}</table></div>
+        <div style="margin-top:10px;"><button class="btn btn-ghost btn-sm" data-set="${esc(s.name)}">Flashcards: ${esc(s.name)}</button></div></div></details>`;
+    }).join("");
+
+    app.innerHTML = `
+      ${header()}
+      ${tabs()}
+      <div class="card">
+        <h2>Drill what you missed</h2>
+        <p class="muted">Every question here targets a concept you got wrong on a Dion attempt. Stems are rewritten summaries, choices reshuffle each time, and the feedback shows what you picked on Dion.</p>
+        <div class="mode-grid">${drillBtns}</div>
+      </div>
+      <div class="card">
+        <h2>Vocabulary flashcards</h2>
+        <p class="muted">${cards.length} terms you mixed up, grouped into confusion sets. ${knownCount} marked known.</p>
+        <div class="btn-row" style="justify-content:flex-start; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-primary" data-set="">Study all unknown cards</button>
+          ${knownCount ? `<button class="btn btn-ghost btn-sm" id="reset-known">Reset known cards</button>` : ""}
+        </div>
+      </div>
+      <div class="card">
+        <h2>Confusion sets</h2>
+        <p class="muted">Terms that sound alike, side by side. The <span class="tell">tell</span> is the phrase in a question that points to that answer.</p>
+        ${sets}
+      </div>
+    `;
+    wireTabs();
+    app.querySelectorAll("[data-weak]").forEach(b => b.addEventListener("click", () => {
+      const k = b.getAttribute("data-weak");
+      startQuiz(k, b.querySelector(".m-title").textContent, false);
+    }));
+    app.querySelectorAll("[data-set]").forEach(b => b.addEventListener("click", () => startFlash(b.getAttribute("data-set"))));
+    const r = document.getElementById("reset-known");
+    if (r) r.addEventListener("click", () => { saveKnown(new Set()); render(); });
+  }
+
+  function startFlash(setName){
+    const known = loadKnown();
+    let cards = allCards(setName || null);
+    const unknown = cards.filter(c => !known.has(c.id));
+    if (!setName) cards = unknown.length ? unknown : cards;
+    state.flash = { setName: setName || "All sets", cards: shuffle(cards), idx: 0, flipped: false, gotIt: 0, again: 0 };
+    state.view = "flash";
+    render();
+    window.scrollTo(0,0);
+  }
+
+  function renderFlash(){
+    const f = state.flash;
+    if (f.idx >= f.cards.length){
+      app.innerHTML = `${header()}${tabs()}<div class="card" style="text-align:center;">
+        <div class="score-hero"><div class="big">${f.gotIt}</div><div class="label">cards marked known &middot; ${f.again} sent back for another look</div></div>
+        <div class="btn-row"><button class="btn btn-ghost" id="fl-back">Back to Weak Spots</button><button class="btn btn-primary" id="fl-again">Go again</button></div></div>`;
+      wireTabs();
+      document.getElementById("fl-back").addEventListener("click", () => { state.view = "weak"; render(); });
+      document.getElementById("fl-again").addEventListener("click", () => startFlash(f.setName === "All sets" ? "" : f.setName));
+      return;
+    }
+    const c = f.cards[f.idx];
+    const pct = Math.round((f.idx / f.cards.length) * 100);
+    app.innerHTML = `
+      ${header()}
+      ${tabs()}
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div class="card">
+        <div class="q-meta"><span class="q-num">Card ${f.idx+1} / ${f.cards.length} &middot; ${esc(f.setName)}</span><span class="q-domain-badge">obj ${esc(c.obj)}</span></div>
+        <div class="flashcard" id="fc">
+          <div class="setname">${esc(c.set)}</div>
+          <div class="term">${esc(c.term)}</div>
+          ${f.flipped ? `<div class="def">${esc(c.def)}</div>${c.tell ? `<div class="tell" style="margin-top:10px;">tell: ${esc(c.tell)}</div>` : ""}` : `<div class="hint">tap to reveal</div>`}
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-ghost" id="fl-exit">Exit</button>
+          ${f.flipped ? `<span style="display:flex; gap:8px;"><button class="btn btn-ghost" id="fl-no">Again</button><button class="btn btn-primary" id="fl-yes">Got it</button></span>` : `<button class="btn btn-primary" id="fl-flip">Reveal</button>`}
+        </div>
+      </div>`;
+    wireTabs();
+    const flip = () => { f.flipped = true; render(); };
+    document.getElementById("fc").addEventListener("click", () => { if (!f.flipped) flip(); });
+    const fb = document.getElementById("fl-flip"); if (fb) fb.addEventListener("click", flip);
+    document.getElementById("fl-exit").addEventListener("click", () => { state.view = "weak"; render(); });
+    const yes = document.getElementById("fl-yes");
+    if (yes) yes.addEventListener("click", () => {
+      const k = loadKnown(); k.add(c.id); saveKnown(k);
+      f.gotIt += 1; f.idx += 1; f.flipped = false; render();
+    });
+    const no = document.getElementById("fl-no");
+    if (no) no.addEventListener("click", () => {
+      const k = loadKnown(); k.delete(c.id); saveKnown(k);
+      f.again += 1; f.cards.push(c); f.idx += 1; f.flipped = false; render();
+    });
+  }
+
   function renderHome(){
     const historyRows = state.history.length ? state.history.map(h => {
       const pct = Math.round((h.correct / h.total) * 100);
@@ -382,6 +1191,7 @@ const ACRONYM_BANK = [{"a": "2FA", "e": "Two-factor Authentication"}, {"a": "3DE
 
     app.innerHTML = `
       ${header()}
+      ${tabs()}
       ${domainMeter()}
       <div class="card">
         <h2>Start a practice session</h2>
@@ -431,6 +1241,7 @@ const ACRONYM_BANK = [{"a": "2FA", "e": "Two-factor Authentication"}, {"a": "3DE
     });
     const clearBtn = document.getElementById("clear-history");
     if (clearBtn) clearBtn.addEventListener("click", clearHistory);
+    wireTabs();
   }
 
   function startQuiz(domainFilter, label, timed){
@@ -549,7 +1360,7 @@ const ACRONYM_BANK = [{"a": "2FA", "e": "Two-factor Authentication"}, {"a": "3DE
     }
     document.getElementById("quit-btn").addEventListener("click", () => {
       if (quiz.timerId){ clearInterval(quiz.timerId); quiz.timerId = null; }
-      state.view = "home";
+      const f = quiz.domainFilter; state.view = (f && (f.indexOf(WEAK_PREFIX)===0 || f===PORTS_KEY || f===FIREWALL_KEY)) ? "weak" : "home";
       render();
     });
     const nextBtn = document.getElementById("next-btn");
@@ -630,7 +1441,7 @@ const ACRONYM_BANK = [{"a": "2FA", "e": "Two-factor Authentication"}, {"a": "3DE
       <div class="footer-note">Score saved to your attempt history. Take this test again anytime &mdash; order reshuffles every time.</div>
     `;
 
-    document.getElementById("home-btn").addEventListener("click", () => { state.view = "home"; render(); });
+    document.getElementById("home-btn").addEventListener("click", () => { const f = state.quiz && state.quiz.domainFilter; state.view = (f && (f.indexOf(WEAK_PREFIX)===0 || f===PORTS_KEY || f===FIREWALL_KEY)) ? "weak" : "home"; render(); });
     document.getElementById("retry-btn").addEventListener("click", () => {
       const filter = state.quiz.domainFilter;
       const label = state.quiz.label;
@@ -643,6 +1454,9 @@ const ACRONYM_BANK = [{"a": "2FA", "e": "Two-factor Authentication"}, {"a": "3DE
     if (state.view === "home") renderHome();
     else if (state.view === "quiz") renderQuiz();
     else if (state.view === "results") renderResults();
+    else if (state.view === "analysis") renderAnalysis();
+    else if (state.view === "weak") renderWeak();
+    else if (state.view === "flash") renderFlash();
   }
 
   (async function init(){

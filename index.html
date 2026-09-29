@@ -200,6 +200,21 @@
   .legend-row{display:flex; gap:16px; flex-wrap:wrap; font-family:var(--mono); font-size:10px; color:var(--text-dim); margin-top:8px;}
   .legend-row .sw{width:9px; height:9px; display:inline-block; border-radius:2px; margin-right:5px; vertical-align:middle;}
   .dotkey{width:9px; height:9px; display:inline-block; border-radius:50%; background:var(--amber); margin-right:5px; vertical-align:middle;}
+  .optx{margin-top:6px;}
+  .ox{border-left:3px solid var(--line); padding:8px 10px; margin:8px 0; background:rgba(0,0,0,0.12); border-radius:0 6px 6px 0;}
+  .ox.ok{border-left-color:var(--green);} .ox.bad{border-left-color:var(--red);}
+  .ox-h{font-weight:600; font-size:13px; display:flex; align-items:center; gap:6px; flex-wrap:wrap;}
+  .ox-h .letter{display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; border-radius:4px; background:var(--bg); font-family:var(--mono); font-size:10px; color:var(--text-dim);}
+  .ox-tag{font-family:var(--mono); font-size:9px; letter-spacing:.5px; text-transform:uppercase; color:var(--text-dim); border:1px solid var(--line); border-radius:8px; padding:1px 6px;}
+  .ox-tag.ok{color:var(--green); border-color:rgba(87,211,140,.5);} .ox-tag.bad{color:var(--red); border-color:rgba(239,106,106,.5);}
+  .ox-e{font-size:13px; line-height:1.55; color:var(--text-dim); margin-top:4px;}
+  .mastery-row{display:flex; align-items:center; gap:10px; font-size:12px; margin-bottom:8px;}
+  .mastery-row .nm{width:150px; flex-shrink:0; font-family:var(--mono); font-size:11px; color:var(--text-dim);}
+  .obj-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:8px; margin-top:10px;}
+  .obj-btn{background:var(--panel-2); border:1px solid var(--line); border-radius:8px; padding:9px 10px; text-align:left; color:var(--text); cursor:pointer; font-size:12px;}
+  .obj-btn:hover{border-color:var(--accent);}
+  .obj-btn .on{font-family:var(--mono); font-weight:700; color:var(--accent); margin-right:6px;}
+  .obj-btn .os{display:block; font-family:var(--mono); font-size:10px; color:var(--text-dim); margin-top:3px;}
   .pick-note{font-size:12px; color:var(--amber); font-family:var(--mono); display:block; margin-bottom:6px;}
 </style>
 
@@ -221,6 +236,13 @@ const ACRONYM_BANK = [{"a": "2FA", "e": "Two-factor Authentication"}, {"a": "3DE
 </script>
 <script src="dion-history.js"></script>
 <script src="dion-parser.js"></script>
+<script src="bank/d1.js"></script>
+<script src="bank/d2a.js"></script>
+<script src="bank/d2b.js"></script>
+<script src="bank/d3.js"></script>
+<script src="bank/d4a.js"></script>
+<script src="bank/d4b.js"></script>
+<script src="bank/d5.js"></script>
 <script>
 // ===== Weak-spot data built from Phil's Dion Training practice exams (7 attempts, Sep 2026) =====
 // Question stems are paraphrased summaries of missed concepts, not reproduced exam items.
@@ -908,6 +930,66 @@ const VOCAB_SETS = [
     return out;
   }
 
+  // ===== Fresh Question Bank =====
+  const BANK = (window.FRESH_BANK || []).map((q, i) => Object.assign({ id: i }, q));
+  const BANK_PREFIX = "BANK:";
+  const BANK_STATS_KEY = "bank-stats";
+  function loadBankStats(){ try { return JSON.parse(localStorage.getItem(BANK_STATS_KEY) || "{}"); } catch(e){ return {}; } }
+  function recordBank(id, ok){
+    const st = loadBankStats(); const r = st[id] || [0,0,0];
+    r[0] += 1; if (ok) r[1] += 1; r[2] = ok ? 1 : 0; st[id] = r;
+    try { localStorage.setItem(BANK_STATS_KEY, JSON.stringify(st)); } catch(e){}
+  }
+  function bankQuestion(q){
+    return {
+      domain: DOMAIN_BY_NUM[q.o[0]], obj: q.o, bankId: q.id,
+      question: esc(q.q), choices: q.c.map(esc), correct: q.a,
+      optExpl: q.e.map(esc), explanation: esc(q.e[q.a]),
+      resource: { label: `SY0-701 objective ${q.o}: ${OBJ_NAMES[q.o] || ""}`, url: MESSER }
+    };
+  }
+  // Prefer questions not yet answered correctly; then least-seen.
+  function pickFrom(list, n){
+    const st = loadBankStats();
+    const score = q => { const r = st[q.id]; if (!r) return Math.random(); if (r[2] === 0) return 1 + Math.random(); return 2 + r[0] + Math.random(); };
+    return list.slice().sort((a,b) => score(a) - score(b)).slice(0, n);
+  }
+  function targetWeights(){
+    // Blend Dion miss rate per objective with bank miss rate.
+    const st = computeStats(getHistory());
+    const dion = {}; st.objs.forEach(o => dion[o.obj] = o.miss);
+    const bs = loadBankStats(); const bank = {};
+    BANK.forEach(q => { const r = bs[q.id]; if (!r) return; const b = bank[q.o] || (bank[q.o] = [0,0]); b[0] += r[0]; b[1] += r[1]; });
+    const objs = Object.keys(OBJ_NAMES).map(o => {
+      const d = dion[o] != null ? dion[o] : 0.3;
+      const b = bank[o] && bank[o][0] >= 5 ? 1 - bank[o][1]/bank[o][0] : null;
+      return { o, w: b == null ? d : 0.6*d + 0.4*b };
+    }).sort((a,b) => b.w - a.w);
+    return objs;
+  }
+  function buildBankQuestions(key){
+    let list = [];
+    if (key === "exam"){
+      Object.keys(FULL_EXAM_COUNTS).forEach((dk, i) => {
+        const n = String(i+1);
+        list = list.concat(pickFrom(BANK.filter(q => q.o[0] === n), FULL_EXAM_COUNTS[dk]));
+      });
+    } else if (key === "target"){
+      const top = targetWeights().slice(0, 8);
+      const tw = top.reduce((s,x) => s + x.w, 0);
+      top.forEach(t => { list = list.concat(pickFrom(BANK.filter(q => q.o === t.o), Math.max(2, Math.round(25 * t.w / tw)))); });
+      list = list.slice(0, 25);
+    } else if (key === "missed"){
+      const st = loadBankStats();
+      list = BANK.filter(q => st[q.id] && st[q.id][2] === 0).slice(0, 30);
+    } else if (key.indexOf("d") === 0){
+      list = pickFrom(BANK.filter(q => q.o[0] === key.slice(1)), 20);
+    } else if (key.indexOf("o") === 0){
+      list = pickFrom(BANK.filter(q => q.o === key.slice(1)), 15);
+    }
+    return list.map(bankQuestion);
+  }
+
   function poolForDomain(domainKey){
     const base = QUESTION_BANK.filter(q => q.domain === domainKey);
     if (domainKey === "5.0 Security Program Management and Oversight"){
@@ -925,7 +1007,10 @@ const VOCAB_SETS = [
         explanation: q.explanation,
         resource: q.resource,
         choices: order.map(i => q.choices[i]),
-        correctIndex: order.indexOf(q.correct)
+        correctIndex: order.indexOf(q.correct),
+        optExpl: q.optExpl ? order.map(i => q.optExpl[i]) : null,
+        bankId: q.bankId != null ? q.bankId : null,
+        obj: q.obj || null
       };
     });
   }
@@ -933,6 +1018,9 @@ const VOCAB_SETS = [
   function buildAttemptQuestions(domainFilter){
     if (domainFilter && domainFilter.indexOf(WEAK_PREFIX) === 0){
       return finalizeQuestions(weakPool(domainFilter.slice(WEAK_PREFIX.length)));
+    }
+    if (domainFilter && domainFilter.indexOf(BANK_PREFIX) === 0){
+      return finalizeQuestions(buildBankQuestions(domainFilter.slice(BANK_PREFIX.length)));
     }
     if (domainFilter === PORTS_KEY) return finalizeQuestions(buildPortQuestions());
     if (domainFilter === FIREWALL_KEY) return finalizeQuestions(buildFirewallQuestions());
@@ -995,7 +1083,7 @@ const VOCAB_SETS = [
           <span class="tag">SY0-701 // PRACTICE CONSOLE</span>
           <h1>Security+ Study Terminal</h1>
         </div>
-        <div class="pill"><span class="status-dot"></span>${QUESTION_BANK.length}+ question pool</div>
+        <div class="pill"><span class="status-dot"></span>${QUESTION_BANK.length + (window.FRESH_BANK ? window.FRESH_BANK.length : 0)}+ question pool</div>
       </div>`;
   }
 
@@ -1007,7 +1095,7 @@ const VOCAB_SETS = [
 
 
   function tabs(){
-    const t = [["home","Practice"],["analysis","Dion Analysis"],["weak","Weak Spots"]];
+    const t = [["home","Practice"],["bank","Question Bank"],["analysis","Dion Analysis"],["weak","Weak Spots"],["plan","Test Day Plan"]];
     const cur = (state.view === "flash") ? "weak" : state.view;
     return `<div class="tabs">${t.map(x => `<button class="tab-btn ${cur===x[0]?"active":""}" data-tab="${x[0]}">${x[1]}</button>`).join("")}</div>`;
   }
@@ -1162,6 +1250,59 @@ const VOCAB_SETS = [
     app.querySelectorAll("[data-drill]").forEach(b => b.addEventListener("click", () => startQuiz(b.getAttribute("data-drill"), b.getAttribute("data-drill") + " Drill", false)));
   }
 
+
+  function renderBank(){
+    const st = loadBankStats();
+    const ids = Object.keys(st);
+    const seen = ids.length, right = ids.filter(k => st[k][2] === 1).length;
+    const missedNow = ids.filter(k => st[k][2] === 0).length;
+    const dm = DOMAINS.map((d, i) => {
+      const n = String(i+1); const qs = BANK.filter(q => q.o[0] === n);
+      const s2 = qs.filter(q => st[q.id]); const ok = s2.filter(q => st[q.id][2] === 1).length;
+      const p = s2.length ? Math.round(100*ok/s2.length) : 0;
+      return `<div class="mastery-row"><div class="nm">${d.short}</div><div class="db-track"><div class="db-fill" style="width:${p}%; background:${p<60?'var(--red)':p<80?'var(--amber)':d.color}"></div></div><div class="db-pct">${s2.length ? p+"%" : "—"}</div><span class="muted" style="font-size:10px; width:70px; text-align:right;">${s2.length}/${qs.length} seen</span></div>`;
+    }).join("");
+    const top = targetWeights().slice(0, 8).map(t => `${t.o}`).join(", ");
+    const objBtns = Object.keys(OBJ_NAMES).map(o => {
+      const qs = BANK.filter(q => q.o === o); const s2 = qs.filter(q => st[q.id]); const ok = s2.filter(q => st[q.id][2] === 1).length;
+      return `<button class="obj-btn" data-bank="o${o}"><span class="on">${o}</span>${OBJ_NAMES[o]}<span class="os">${qs.length} q &middot; ${s2.length ? Math.round(100*ok/s2.length)+"% latest" : "not started"}</span></button>`;
+    }).join("");
+    app.innerHTML = `
+      ${header()}
+      ${tabs()}
+      <div class="card">
+        <h2>Fresh Question Bank &middot; ${BANK.length} questions</h2>
+        <p class="muted">Original scenario questions at Dion's difficulty, weighted like the real exam. None of these are Dion questions, so you can't have memorized them. After every answer you get a breakdown of <b>all four options</b>: why the right one is right and why each wrong one is wrong. Read the "why not" lines even when you get it right; that's where the understanding comes from.</p>
+        <div class="mode-grid">
+          <button class="mode-btn" data-bank="target"><div class="m-title">&#127919; Targeted: my weakest objectives</div><div class="m-sub">25 q &middot; built from your Dion results + bank misses &middot; now: ${top}</div></button>
+          <button class="mode-btn" data-bank="exam"><div class="m-title">Full 90-question bank exam</div><div class="m-sub">Weighted by domain &middot; unseen questions first</div></button>
+          <button class="mode-btn" data-bank="exam" data-timed="1"><div class="m-title">&#9201; Timed 90-question bank exam</div><div class="m-sub">90 minutes &middot; exam-day rehearsal</div></button>
+          <button class="mode-btn" data-bank="missed"><div class="m-title">Redo my bank misses</div><div class="m-sub">${missedNow} questions currently missed</div></button>
+          ${DOMAINS.map((d,i) => `<button class="mode-btn" data-bank="d${i+1}"><div class="m-title">${d.short}</div><div class="m-sub">20 q &middot; ${BANK.filter(q=>q.o[0]===String(i+1)).length} in bank</div></button>`).join("")}
+        </div>
+      </div>
+      <div class="card">
+        <h2>Your bank progress</h2>
+        <p class="muted">${seen} of ${BANK.length} questions attempted &middot; ${right} right on the latest try &middot; ${missedNow} to redo.</p>
+        ${dm}
+      </div>
+      <div class="card">
+        <h2>Drill one objective</h2>
+        <p class="muted">15 questions from a single exam objective. Good for the topics that keep showing up in your misses.</p>
+        <div class="obj-grid">${objBtns}</div>
+      </div>
+    `;
+    wireTabs();
+    app.querySelectorAll("[data-bank]").forEach(b => b.addEventListener("click", () => {
+      const k = b.getAttribute("data-bank");
+      if (k === "missed" && missedNow === 0){ alertInline(b, "No bank misses yet"); return; }
+      const label = k === "target" ? "Targeted Weak Objectives" : k === "exam" ? "Bank Exam (90)" : k === "missed" ? "Bank Misses" : k[0] === "d" ? "Bank " + DOMAINS[+k.slice(1)-1].short : "Objective " + k.slice(1);
+      startQuiz(BANK_PREFIX + k, label, b.getAttribute("data-timed") === "1");
+    }));
+  }
+  function alertInline(el, msg){ const s = el.querySelector(".m-sub"); if (s) s.textContent = msg; }
+
+  function renderPlan(){ if (window.renderPlanImpl) return window.renderPlanImpl({app, header, tabs, wireTabs, startQuiz, BANK_PREFIX, uploadCardHtml, wireUpload, computeStats, getHistory, esc, targetWeights, OBJ_NAMES, state, render}); app.innerHTML = header()+tabs()+'<div class="card muted">Plan coming soon.</div>'; wireTabs(); }
   function renderWeak(){
     const known = loadKnown();
     const cards = allCards();
@@ -1397,6 +1538,14 @@ const VOCAB_SETS = [
     finishQuiz();
   }
 
+  function optBreakdown(q, selected){
+    return `<div class="optx">` + q.choices.map((c, i) => {
+      const isC = i === q.correctIndex, isP = i === selected;
+      const tag = isC ? `<span class="ox-tag ok">&#10003; Correct</span>` : isP ? `<span class="ox-tag bad">&#10007; Your answer</span>` : `<span class="ox-tag">Why not</span>`;
+      return `<div class="ox ${isC ? "ok" : isP ? "bad" : ""}"><div class="ox-h"><span class="letter">${String.fromCharCode(65+i)}</span>${c} ${tag}</div><div class="ox-e">${q.optExpl[i]}</div></div>`;
+    }).join("") + `</div>`;
+  }
+
   function renderQuiz(){
     const quiz = state.quiz;
     const q = quiz.questions[quiz.index];
@@ -1420,7 +1569,7 @@ const VOCAB_SETS = [
       feedbackHtml = `
         <div class="feedback ${wasRight ? "right" : "wrong"}">
           <span class="verdict">${wasRight ? "Correct" : "Incorrect"}</span>
-          ${q.explanation}
+          ${q.optExpl ? optBreakdown(q, quiz.selected) : q.explanation}
           <div><a class="resource-link" href="${q.resource.url}" target="_blank" rel="noopener">&#8250; Study more: ${q.resource.label}</a></div>
         </div>`;
     }
@@ -1450,14 +1599,15 @@ const VOCAB_SETS = [
           const i = parseInt(btn.getAttribute("data-i"), 10);
           quiz.selected = i;
           quiz.answered = true;
-          quiz.answers.push({ domain: q.domain, correct: i === q.correctIndex, question: q.question, explanation: q.explanation, resource: q.resource, chosen: q.choices[i], correctChoice: q.choices[q.correctIndex] });
+          quiz.answers.push({ domain: q.domain, correct: i === q.correctIndex, question: q.question, explanation: q.explanation, resource: q.resource, chosen: q.choices[i], correctChoice: q.choices[q.correctIndex], chosenWhy: q.optExpl && i !== q.correctIndex ? q.optExpl[i] : null });
+          if (q.bankId != null) recordBank(q.bankId, i === q.correctIndex);
           render();
         });
       });
     }
     document.getElementById("quit-btn").addEventListener("click", () => {
       if (quiz.timerId){ clearInterval(quiz.timerId); quiz.timerId = null; }
-      const f = quiz.domainFilter; state.view = (f && (f.indexOf(WEAK_PREFIX)===0 || f===PORTS_KEY || f===FIREWALL_KEY)) ? "weak" : "home";
+      const f = quiz.domainFilter; state.view = (f && (f.indexOf(WEAK_PREFIX)===0 || f===PORTS_KEY || f===FIREWALL_KEY)) ? "weak" : (f && f.indexOf(BANK_PREFIX)===0) ? "bank" : "home";
       render();
     });
     const nextBtn = document.getElementById("next-btn");
@@ -1512,7 +1662,8 @@ const VOCAB_SETS = [
       <div class="review-item">
         <div class="review-q"><span class="review-tag ${a.correct ? "right" : "wrong"}">${a.correct ? "CORRECT" : "MISSED"}</span>${a.question}</div>
         <div class="muted">Your answer: ${a.chosen}${a.correct ? "" : ` &mdash; Correct answer: ${a.correctChoice}`}</div>
-        <div class="muted" style="margin-top:6px;">${a.explanation}</div>
+        ${a.chosenWhy ? `<div class="muted" style="margin-top:6px;"><b class="pct-bad">Why yours is wrong:</b> ${a.chosenWhy}</div>` : ""}
+        <div class="muted" style="margin-top:6px;">${a.chosenWhy ? `<b class="pct-good">Why the answer is right:</b> ` : ""}${a.explanation}</div>
         <div><a class="resource-link" href="${a.resource.url}" target="_blank" rel="noopener">&#8250; ${a.resource.label}</a></div>
       </div>
     `).join("");
@@ -1538,7 +1689,7 @@ const VOCAB_SETS = [
       <div class="footer-note">Score saved to your attempt history. Take this test again anytime &mdash; order reshuffles every time.</div>
     `;
 
-    document.getElementById("home-btn").addEventListener("click", () => { const f = state.quiz && state.quiz.domainFilter; state.view = (f && (f.indexOf(WEAK_PREFIX)===0 || f===PORTS_KEY || f===FIREWALL_KEY)) ? "weak" : "home"; render(); });
+    document.getElementById("home-btn").addEventListener("click", () => { const f = state.quiz && state.quiz.domainFilter; state.view = (f && (f.indexOf(WEAK_PREFIX)===0 || f===PORTS_KEY || f===FIREWALL_KEY)) ? "weak" : (f && f.indexOf(BANK_PREFIX)===0) ? "bank" : "home"; render(); });
     document.getElementById("retry-btn").addEventListener("click", () => {
       const filter = state.quiz.domainFilter;
       const label = state.quiz.label;
@@ -1554,6 +1705,8 @@ const VOCAB_SETS = [
     else if (state.view === "analysis") renderAnalysis();
     else if (state.view === "weak") renderWeak();
     else if (state.view === "flash") renderFlash();
+    else if (state.view === "bank") renderBank();
+    else if (state.view === "plan") renderPlan();
   }
 
   (async function init(){

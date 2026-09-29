@@ -1,6 +1,6 @@
 // Parses a Dion Training exam-results PDF (browser "Print to PDF" of the results page)
 // into an attempt record: { attempt, date, score, total, items:[{k, ok, obj, pbq}] }.
-// Uses pdf.js (vendor/pdf.min.mjs), loaded on demand.
+// Uses pdf.js (vendor/pdf.min.js), loaded on demand.
 (function(){
   const PBQ_TITLES = {
     "Social Engineering": "2.2", "Classify Threat Actors": "2.1", "Firewall Configuration": "4.5",
@@ -17,8 +17,8 @@
   function loadPdfjs(){
     if (!pdfjsPromise){
       const base = new URL("vendor/", document.baseURI).href;
-      pdfjsPromise = import(base + "pdf.min.mjs").then(m => {
-        m.GlobalWorkerOptions.workerSrc = base + "pdf.worker.min.mjs";
+      pdfjsPromise = import(base + "pdf.min.js").then(m => {
+        m.GlobalWorkerOptions.workerSrc = base + "pdf.worker.min.js";
         return m;
       });
     }

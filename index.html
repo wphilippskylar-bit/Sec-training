@@ -215,6 +215,17 @@
   .obj-btn:hover{border-color:var(--accent);}
   .obj-btn .on{font-family:var(--mono); font-weight:700; color:var(--accent); margin-right:6px;}
   .obj-btn .os{display:block; font-family:var(--mono); font-size:10px; color:var(--text-dim); margin-top:3px;}
+  .kpis{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:12px 0;}
+  .kpi{background:var(--panel-2); border:1px solid var(--line); border-radius:8px; padding:12px 10px; text-align:center;}
+  .kpi .kv{font-family:var(--mono); font-size:24px; font-weight:700;}
+  .kpi .kl{font-size:10px; color:var(--text-dim); font-family:var(--mono); margin-top:4px; line-height:1.3;}
+  .ptask{display:flex; gap:10px; align-items:flex-start; padding:8px 0; border-bottom:1px solid var(--line); font-size:13px; line-height:1.5; cursor:pointer;}
+  .ptask:last-of-type{border-bottom:none;}
+  .ptask input{margin-top:4px; accent-color:var(--accent); width:16px; height:16px; flex-shrink:0;}
+  .ptask a{color:var(--accent);}
+  details.pday.today{border-color:var(--accent);}
+  details.pday.past summary{opacity:.6;}
+  details.pday.big{background:transparent; border:none;} details.pday.big summary{display:none;} details.pday.big .inner{padding:0;}
   .pick-note{font-size:12px; color:var(--amber); font-family:var(--mono); display:block; margin-bottom:6px;}
 </style>
 
@@ -243,6 +254,7 @@ const ACRONYM_BANK = [{"a": "2FA", "e": "Two-factor Authentication"}, {"a": "3DE
 <script src="bank/d4a.js"></script>
 <script src="bank/d4b.js"></script>
 <script src="bank/d5.js"></script>
+<script src="plan.js"></script>
 <script>
 // ===== Weak-spot data built from Phil's Dion Training practice exams (7 attempts, Sep 2026) =====
 // Question stems are paraphrased summaries of missed concepts, not reproduced exam items.
@@ -1100,7 +1112,7 @@ const VOCAB_SETS = [
     return `<div class="tabs">${t.map(x => `<button class="tab-btn ${cur===x[0]?"active":""}" data-tab="${x[0]}">${x[1]}</button>`).join("")}</div>`;
   }
   function wireTabs(){
-    app.querySelectorAll(".tab-btn").forEach(b => b.addEventListener("click", () => { state.view = b.getAttribute("data-tab"); render(); window.scrollTo(0,0); }));
+    app.querySelectorAll(".tab-btn").forEach(b => b.addEventListener("click", () => { state.returnView = null; state.view = b.getAttribute("data-tab"); render(); window.scrollTo(0,0); }));
   }
 
   function pctClass(p){ return p >= 80 ? "pct-good" : p >= 65 ? "pct-mid" : "pct-bad"; }
@@ -1607,7 +1619,7 @@ const VOCAB_SETS = [
     }
     document.getElementById("quit-btn").addEventListener("click", () => {
       if (quiz.timerId){ clearInterval(quiz.timerId); quiz.timerId = null; }
-      const f = quiz.domainFilter; state.view = (f && (f.indexOf(WEAK_PREFIX)===0 || f===PORTS_KEY || f===FIREWALL_KEY)) ? "weak" : (f && f.indexOf(BANK_PREFIX)===0) ? "bank" : "home";
+      const f = quiz.domainFilter; state.view = state.returnView ? (() => { const v = state.returnView; state.returnView = null; return v; })() : (f && (f.indexOf(WEAK_PREFIX)===0 || f===PORTS_KEY || f===FIREWALL_KEY)) ? "weak" : (f && f.indexOf(BANK_PREFIX)===0) ? "bank" : "home";
       render();
     });
     const nextBtn = document.getElementById("next-btn");
@@ -1689,7 +1701,7 @@ const VOCAB_SETS = [
       <div class="footer-note">Score saved to your attempt history. Take this test again anytime &mdash; order reshuffles every time.</div>
     `;
 
-    document.getElementById("home-btn").addEventListener("click", () => { const f = state.quiz && state.quiz.domainFilter; state.view = (f && (f.indexOf(WEAK_PREFIX)===0 || f===PORTS_KEY || f===FIREWALL_KEY)) ? "weak" : (f && f.indexOf(BANK_PREFIX)===0) ? "bank" : "home"; render(); });
+    document.getElementById("home-btn").addEventListener("click", () => { const f = state.quiz && state.quiz.domainFilter; state.view = state.returnView ? (() => { const v = state.returnView; state.returnView = null; return v; })() : (f && (f.indexOf(WEAK_PREFIX)===0 || f===PORTS_KEY || f===FIREWALL_KEY)) ? "weak" : (f && f.indexOf(BANK_PREFIX)===0) ? "bank" : "home"; render(); });
     document.getElementById("retry-btn").addEventListener("click", () => {
       const filter = state.quiz.domainFilter;
       const label = state.quiz.label;

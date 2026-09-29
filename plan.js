@@ -33,7 +33,7 @@
     { d:"2026-10-10", focus:"Web attacks (XSS, CSRF, SQLi)", objs:["2.3","2.4"], rooms:[["Web Application Basics", THM.cs101, "Cyber Security 101 › Web Hacking", 45],["SQL Fundamentals", THM.cs101, "Cyber Security 101 › Web Hacking", 45]],
       extra:["Bank: drill objectives 2.3 and 2.4"] },
     { d:"2026-10-11", focus:"CHECKPOINT: go / no-go", objs:[], checkpoint:true, rooms:[],
-      extra:["Timed 90-question BANK exam (Question Bank tab) in one sitting","Decide: keep Oct 15 if bank exam ≥ 80% AND today's Dion ≥ 80% with the firewall sim right. Otherwise move the date 1–2 weeks and keep this plan running."] },
+      extra:["Timed 90-question BANK exam (Question Bank tab) in one sitting","Decide: keep Oct 15 if bank exam ≥ 90% AND today's Dion ≥ 85% with the firewall sim right. Otherwise move the date 1–2 weeks and keep this plan running."] },
     { d:"2026-10-12", focus:"Forensics & SOC workflow", objs:["4.8","4.9","4.4"], rooms:[["Digital Forensics Fundamentals", THM.cs101, "Cyber Security 101 › Defensive Security", 45],["SOC Fundamentals", THM.cs101, "Cyber Security 101 › Defensive Security", 45]],
       extra:["Redo my bank misses"] },
     { d:"2026-10-13", focus:"Close the gaps", objs:[], rooms:[],
@@ -92,11 +92,11 @@
       <div class="card">
         <h2>Path to test day &middot; ${daysLeft} day${daysLeft===1?"":"s"} to Oct 15</h2>
         <div class="kpis">
-          <div class="kpi"><div class="kv ${newAvg!=null && newAvg>=80 ? "pct-good" : newAvg>=70 ? "pct-mid" : "pct-bad"}">${newAvg!=null ? newAvg+"%" : "—"}</div><div class="kl">Dion, first-seen questions (last 3)</div></div>
+          <div class="kpi"><div class="kv ${newAvg!=null && newAvg>=85 ? "pct-good" : newAvg>=70 ? "pct-mid" : "pct-bad"}">${newAvg!=null ? newAvg+"%" : "—"}</div><div class="kl">Dion, first-seen questions (last 3)</div></div>
           <div class="kpi"><div class="kv">${lastA ? lastA.pct+"%" : "—"}</div><div class="kl">Latest Dion (#${lastA ? lastA.attempt : "-"})</div></div>
-          <div class="kpi"><div class="kv ${bankPct!=null && bankPct>=80 ? "pct-good" : bankPct!=null && bankPct>=70 ? "pct-mid" : "pct-bad"}">${bankPct!=null ? bankPct+"%" : "—"}</div><div class="kl">Question bank (${bk.length} seen)</div></div>
+          <div class="kpi"><div class="kv ${bankPct!=null && bankPct>=90 ? "pct-good" : bankPct!=null && bankPct>=75 ? "pct-mid" : "pct-bad"}">${bankPct!=null ? bankPct+"%" : "—"}</div><div class="kl">Question bank (${bk.length} seen)</div></div>
         </div>
-        <p class="muted">Target before Oct 11: <b>80%+</b> on questions you haven't seen before. Each day is one Dion exam to <i>measure</i>, one targeted bank quiz and one or two TryHackMe rooms to <i>understand</i>, and flashcards on your drives. Rooms are ordered by your weakest objectives.</p>
+        <p class="muted">Pass targets before Oct 11: <b>85%+ on Dion</b> (on questions you haven't seen before) and <b>90%+ in the console</b> (question bank). Each day is one Dion exam to <i>measure</i>, one targeted bank quiz and one or two TryHackMe rooms to <i>understand</i>, and flashcards on your drives. Rooms are ordered by your weakest objectives.</p>
       </div>
       ${cur ? `<div class="card"><h2>${cur.d === today ? "Today" : "Starts"}: ${esc(cur.focus)}</h2>${dayCard(cur, true).replace('<details class="vset pday','<details class="vset pday big')}</div>` : ""}
       ${uploadCardHtml()}

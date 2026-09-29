@@ -1078,7 +1078,7 @@ const VOCAB_SETS = [
   }
 
   function scoreClass(pct){
-    if (pct >= 80) return "good";
+    if (pct >= 90) return "good";
     if (pct >= 65) return "mid";
     return "bad";
   }
@@ -1115,7 +1115,7 @@ const VOCAB_SETS = [
     app.querySelectorAll(".tab-btn").forEach(b => b.addEventListener("click", () => { state.returnView = null; state.view = b.getAttribute("data-tab"); render(); window.scrollTo(0,0); }));
   }
 
-  function pctClass(p){ return p >= 80 ? "pct-good" : p >= 65 ? "pct-mid" : "pct-bad"; }
+  function pctClass(p){ return p >= 85 ? "pct-good" : p >= 70 ? "pct-mid" : "pct-bad"; }
 
 
   // ===== Dion attempt history (baked + uploaded) =====
@@ -1272,7 +1272,7 @@ const VOCAB_SETS = [
       const n = String(i+1); const qs = BANK.filter(q => q.o[0] === n);
       const s2 = qs.filter(q => st[q.id]); const ok = s2.filter(q => st[q.id][2] === 1).length;
       const p = s2.length ? Math.round(100*ok/s2.length) : 0;
-      return `<div class="mastery-row"><div class="nm">${d.short}</div><div class="db-track"><div class="db-fill" style="width:${p}%; background:${p<60?'var(--red)':p<80?'var(--amber)':d.color}"></div></div><div class="db-pct">${s2.length ? p+"%" : "—"}</div><span class="muted" style="font-size:10px; width:70px; text-align:right;">${s2.length}/${qs.length} seen</span></div>`;
+      return `<div class="mastery-row"><div class="nm">${d.short}</div><div class="db-track"><div class="db-fill" style="width:${p}%; background:${p<70?'var(--red)':p<90?'var(--amber)':d.color}"></div></div><div class="db-pct">${s2.length ? p+"%" : "—"}</div><span class="muted" style="font-size:10px; width:70px; text-align:right;">${s2.length}/${qs.length} seen</span></div>`;
     }).join("");
     const top = targetWeights().slice(0, 8).map(t => `${t.o}`).join(", ");
     const objBtns = Object.keys(OBJ_NAMES).map(o => {
@@ -1661,10 +1661,10 @@ const VOCAB_SETS = [
     const domainRows = Object.keys(r.byDomain).map(dk => {
       const d = r.byDomain[dk];
       const p = Math.round((d.correct / d.total) * 100);
-      const cls = p >= 80 ? "" : p >= 60 ? "mid" : "weak";
+      const cls = p >= 90 ? "" : p >= 70 ? "mid" : "weak";
       return `<div class="db-row">
         <div class="db-name">${domainShort(dk)}</div>
-        <div class="db-track"><div class="db-fill ${cls}" style="width:${p}%; background:${p<60?'var(--red)':p<80?'var(--amber)':domainColor(dk)}"></div></div>
+        <div class="db-track"><div class="db-fill ${cls}" style="width:${p}%; background:${p<70?'var(--red)':p<90?'var(--amber)':domainColor(dk)}"></div></div>
         <div class="db-pct">${d.correct}/${d.total}</div>
       </div>`;
     }).join("");

@@ -226,6 +226,9 @@
   details.pday.today{border-color:var(--accent);}
   details.pday.past summary{opacity:.6;}
   details.pday.big{background:transparent; border:none;} details.pday.big summary{display:none;} details.pday.big .inner{padding:0;}
+  .hard-card{border-color:rgba(239,106,106,.45); background:linear-gradient(180deg, rgba(239,106,106,.06), transparent 60%), var(--panel);}
+  .tab-btn[data-tab="hard"]{border-color:rgba(239,106,106,.45);}
+  .tab-btn[data-tab="hard"].active{color:var(--red); border-color:var(--red); background:rgba(239,106,106,.1);}
   .pick-note{font-size:12px; color:var(--amber); font-family:var(--mono); display:block; margin-bottom:6px;}
 </style>
 
@@ -254,6 +257,13 @@ const ACRONYM_BANK = [{"a": "2FA", "e": "Two-factor Authentication"}, {"a": "3DE
 <script src="bank/d4a.js"></script>
 <script src="bank/d4b.js"></script>
 <script src="bank/d5.js"></script>
+<script src="bank/hard_d1.js"></script>
+<script src="bank/hard_d2a.js"></script>
+<script src="bank/hard_d2b.js"></script>
+<script src="bank/hard_d3.js"></script>
+<script src="bank/hard_d4a.js"></script>
+<script src="bank/hard_d4b.js"></script>
+<script src="bank/hard_d5.js"></script>
 <script src="plan.js"></script>
 <script>
 // ===== Weak-spot data built from Phil's Dion Training practice exams (7 attempts, Sep 2026) =====
@@ -947,10 +957,16 @@ const VOCAB_SETS = [
   const BANK_PREFIX = "BANK:";
   const BANK_STATS_KEY = "bank-stats";
   function loadBankStats(){ try { return JSON.parse(localStorage.getItem(BANK_STATS_KEY) || "{}"); } catch(e){ return {}; } }
+  const HARD_STATS_KEY = "hard-stats";
+  const HARD_PREFIX = "HARD:";
+  const HARD = (window.HARD_BANK || []).map((q, i) => Object.assign({ id: "h" + i }, q));
+  function loadHardStats(){ try { return JSON.parse(localStorage.getItem(HARD_STATS_KEY) || "{}"); } catch(e){ return {}; } }
   function recordBank(id, ok){
-    const st = loadBankStats(); const r = st[id] || [0,0,0];
+    const hard = typeof id === "string" && id[0] === "h";
+    const key = hard ? HARD_STATS_KEY : BANK_STATS_KEY;
+    const st = hard ? loadHardStats() : loadBankStats(); const r = st[id] || [0,0,0];
     r[0] += 1; if (ok) r[1] += 1; r[2] = ok ? 1 : 0; st[id] = r;
-    try { localStorage.setItem(BANK_STATS_KEY, JSON.stringify(st)); } catch(e){}
+    try { localStorage.setItem(key, JSON.stringify(st)); } catch(e){}
   }
   function bankQuestion(q){
     return {
@@ -961,8 +977,8 @@ const VOCAB_SETS = [
     };
   }
   // Prefer questions not yet answered correctly; then least-seen.
-  function pickFrom(list, n){
-    const st = loadBankStats();
+  function pickFrom(list, n, stats){
+    const st = stats || loadBankStats();
     const score = q => { const r = st[q.id]; if (!r) return Math.random(); if (r[2] === 0) return 1 + Math.random(); return 2 + r[0] + Math.random(); };
     return list.slice().sort((a,b) => score(a) - score(b)).slice(0, n);
   }
@@ -1002,6 +1018,25 @@ const VOCAB_SETS = [
     return list.map(bankQuestion);
   }
 
+  function buildHardQuestions(key){
+    const hs = loadHardStats(); let list = [];
+    const pick = (l, n) => pickFrom(l, n, hs);
+    if (key === "exam"){
+      Object.keys(FULL_EXAM_COUNTS).forEach((dk, i) => { const n = String(i+1); list = list.concat(pick(HARD.filter(q => q.o[0] === n), FULL_EXAM_COUNTS[dk])); });
+    } else if (key === "target"){
+      const top = targetWeights().slice(0, 8); const tw = top.reduce((s,x) => s + x.w, 0);
+      top.forEach(t => { list = list.concat(pick(HARD.filter(q => q.o === t.o), Math.max(2, Math.round(25 * t.w / tw)))); });
+      list = list.slice(0, 25);
+    } else if (key === "missed"){
+      list = HARD.filter(q => hs[q.id] && hs[q.id][2] === 0).slice(0, 30);
+    } else if (key[0] === "d"){
+      list = pick(HARD.filter(q => q.o[0] === key.slice(1)), 20);
+    } else if (key[0] === "o"){
+      list = pick(HARD.filter(q => q.o === key.slice(1)), 10);
+    }
+    return list.map(q => { const b = bankQuestion(q); b.domainLabel = "HARD"; return b; });
+  }
+
   function poolForDomain(domainKey){
     const base = QUESTION_BANK.filter(q => q.domain === domainKey);
     if (domainKey === "5.0 Security Program Management and Oversight"){
@@ -1033,6 +1068,9 @@ const VOCAB_SETS = [
     }
     if (domainFilter && domainFilter.indexOf(BANK_PREFIX) === 0){
       return finalizeQuestions(buildBankQuestions(domainFilter.slice(BANK_PREFIX.length)));
+    }
+    if (domainFilter && domainFilter.indexOf(HARD_PREFIX) === 0){
+      return finalizeQuestions(buildHardQuestions(domainFilter.slice(HARD_PREFIX.length)));
     }
     if (domainFilter === PORTS_KEY) return finalizeQuestions(buildPortQuestions());
     if (domainFilter === FIREWALL_KEY) return finalizeQuestions(buildFirewallQuestions());
@@ -1095,7 +1133,7 @@ const VOCAB_SETS = [
           <span class="tag">SY0-701 // PRACTICE CONSOLE</span>
           <h1>Security+ Study Terminal</h1>
         </div>
-        <div class="pill"><span class="status-dot"></span>${QUESTION_BANK.length + (window.FRESH_BANK ? window.FRESH_BANK.length : 0)}+ question pool</div>
+        <div class="pill"><span class="status-dot"></span>${QUESTION_BANK.length + (window.FRESH_BANK ? window.FRESH_BANK.length : 0) + (window.HARD_BANK ? window.HARD_BANK.length : 0)}+ question pool</div>
       </div>`;
   }
 
@@ -1107,7 +1145,7 @@ const VOCAB_SETS = [
 
 
   function tabs(){
-    const t = [["home","Practice"],["bank","Question Bank"],["analysis","Dion Analysis"],["weak","Weak Spots"],["plan","Test Day Plan"]];
+    const t = [["home","Practice"],["bank","Question Bank"],["hard","Hard Mode"],["analysis","Dion Analysis"],["weak","Weak Spots"],["plan","Test Day Plan"]];
     const cur = (state.view === "flash") ? "weak" : state.view;
     return `<div class="tabs">${t.map(x => `<button class="tab-btn ${cur===x[0]?"active":""}" data-tab="${x[0]}">${x[1]}</button>`).join("")}</div>`;
   }
@@ -1310,6 +1348,54 @@ const VOCAB_SETS = [
       if (k === "missed" && missedNow === 0){ alertInline(b, "No bank misses yet"); return; }
       const label = k === "target" ? "Targeted Weak Objectives" : k === "exam" ? "Bank Exam (90)" : k === "missed" ? "Bank Misses" : k[0] === "d" ? "Bank " + DOMAINS[+k.slice(1)-1].short : "Objective " + k.slice(1);
       startQuiz(BANK_PREFIX + k, label, b.getAttribute("data-timed") === "1");
+    }));
+  }
+  function renderHard(){
+    const st = loadHardStats();
+    const ids = Object.keys(st);
+    const seen = ids.length, right = ids.filter(k => st[k][2] === 1).length, missedNow = ids.filter(k => st[k][2] === 0).length;
+    const accAll = seen ? Math.round(100*right/seen) : null;
+    const dm = DOMAINS.map((d, i) => {
+      const n = String(i+1); const qs = HARD.filter(q => q.o[0] === n);
+      const s2 = qs.filter(q => st[q.id]); const ok = s2.filter(q => st[q.id][2] === 1).length;
+      const p = s2.length ? Math.round(100*ok/s2.length) : 0;
+      return `<div class="mastery-row"><div class="nm">${d.short}</div><div class="db-track"><div class="db-fill" style="width:${p}%; background:${p<70?'var(--red)':p<90?'var(--amber)':d.color}"></div></div><div class="db-pct">${s2.length ? p+"%" : "—"}</div><span class="muted" style="font-size:10px; width:70px; text-align:right;">${s2.length}/${qs.length} seen</span></div>`;
+    }).join("");
+    const objBtns = Object.keys(OBJ_NAMES).map(o => {
+      const qs = HARD.filter(q => q.o === o); const s2 = qs.filter(q => st[q.id]); const ok = s2.filter(q => st[q.id][2] === 1).length;
+      return `<button class="obj-btn" data-hard="o${o}"><span class="on">${o}</span>${OBJ_NAMES[o]}<span class="os">${qs.length} q &middot; ${s2.length ? Math.round(100*ok/s2.length)+"% latest" : "not started"}</span></button>`;
+    }).join("");
+    app.innerHTML = `
+      ${header()}
+      ${tabs()}
+      <div class="card hard-card">
+        <h2>&#128293; Hard Mode &middot; ${HARD.length} questions</h2>
+        <p class="muted">Harder than the Question Bank: all four options are plausible, scenarios combine concepts, several need calculations (ALE, SLA uptime, backup sets), and the wording turns on BEST / FIRST / MOST / NOT. Split like the real exam: 60 Domain 1, 110 Domain 2, 90 Domain 3, 140 Domain 4, 100 Domain 5. Every option is explained after you answer.</p>
+        <p class="muted">Target: <b>90%</b>. If you can hold 90% here, Dion's 85% should follow.</p>
+        <div class="mode-grid">
+          <button class="mode-btn" data-hard="exam" data-timed="1"><div class="m-title">&#9201; Hard Exam: 90 questions, timed</div><div class="m-sub">All hard &middot; weighted by domain &middot; 90 minutes</div></button>
+          <button class="mode-btn" data-hard="exam"><div class="m-title">Hard Exam: 90 questions, untimed</div><div class="m-sub">Same exam, no clock &middot; read every explanation</div></button>
+          <button class="mode-btn" data-hard="target"><div class="m-title">&#127919; Hard targeted: weakest objectives</div><div class="m-sub">25 q &middot; from your Dion + bank results</div></button>
+          <button class="mode-btn" data-hard="missed"><div class="m-title">Redo my Hard misses</div><div class="m-sub">${missedNow} questions currently missed</div></button>
+          ${DOMAINS.map((d,i) => `<button class="mode-btn" data-hard="d${i+1}"><div class="m-title">Hard ${d.short}</div><div class="m-sub">20 q &middot; ${HARD.filter(q=>q.o[0]===String(i+1)).length} in Hard Mode &middot; ${d.weight}% of exam</div></button>`).join("")}
+        </div>
+      </div>
+      <div class="card">
+        <h2>Hard Mode progress</h2>
+        <p class="muted">${seen} of ${HARD.length} attempted &middot; ${accAll != null ? `<b class="${accAll>=90?"pct-good":accAll>=70?"pct-mid":"pct-bad"}">${accAll}%</b> right on latest try` : "not started"} &middot; ${missedNow} to redo.</p>
+        ${dm}
+      </div>
+      <div class="card">
+        <h2>Hard drill by objective</h2>
+        <div class="obj-grid">${objBtns}</div>
+      </div>
+    `;
+    wireTabs();
+    app.querySelectorAll("[data-hard]").forEach(b => b.addEventListener("click", () => {
+      const k = b.getAttribute("data-hard");
+      if (k === "missed" && missedNow === 0){ alertInline(b, "No Hard misses yet"); return; }
+      const label = k === "exam" ? "Hard Exam (90)" : k === "target" ? "Hard Targeted" : k === "missed" ? "Hard Misses" : k[0] === "d" ? "Hard " + DOMAINS[+k.slice(1)-1].short : "Hard Objective " + k.slice(1);
+      startQuiz(HARD_PREFIX + k, label, b.getAttribute("data-timed") === "1");
     }));
   }
   function alertInline(el, msg){ const s = el.querySelector(".m-sub"); if (s) s.textContent = msg; }
@@ -1619,7 +1705,7 @@ const VOCAB_SETS = [
     }
     document.getElementById("quit-btn").addEventListener("click", () => {
       if (quiz.timerId){ clearInterval(quiz.timerId); quiz.timerId = null; }
-      const f = quiz.domainFilter; state.view = state.returnView ? (() => { const v = state.returnView; state.returnView = null; return v; })() : (f && (f.indexOf(WEAK_PREFIX)===0 || f===PORTS_KEY || f===FIREWALL_KEY)) ? "weak" : (f && f.indexOf(BANK_PREFIX)===0) ? "bank" : "home";
+      const f = quiz.domainFilter; state.view = state.returnView ? (() => { const v = state.returnView; state.returnView = null; return v; })() : (f && (f.indexOf(WEAK_PREFIX)===0 || f===PORTS_KEY || f===FIREWALL_KEY)) ? "weak" : (f && f.indexOf(BANK_PREFIX)===0) ? "bank" : (f && f.indexOf(HARD_PREFIX)===0) ? "hard" : "home";
       render();
     });
     const nextBtn = document.getElementById("next-btn");
@@ -1701,7 +1787,7 @@ const VOCAB_SETS = [
       <div class="footer-note">Score saved to your attempt history. Take this test again anytime &mdash; order reshuffles every time.</div>
     `;
 
-    document.getElementById("home-btn").addEventListener("click", () => { const f = state.quiz && state.quiz.domainFilter; state.view = state.returnView ? (() => { const v = state.returnView; state.returnView = null; return v; })() : (f && (f.indexOf(WEAK_PREFIX)===0 || f===PORTS_KEY || f===FIREWALL_KEY)) ? "weak" : (f && f.indexOf(BANK_PREFIX)===0) ? "bank" : "home"; render(); });
+    document.getElementById("home-btn").addEventListener("click", () => { const f = state.quiz && state.quiz.domainFilter; state.view = state.returnView ? (() => { const v = state.returnView; state.returnView = null; return v; })() : (f && (f.indexOf(WEAK_PREFIX)===0 || f===PORTS_KEY || f===FIREWALL_KEY)) ? "weak" : (f && f.indexOf(BANK_PREFIX)===0) ? "bank" : (f && f.indexOf(HARD_PREFIX)===0) ? "hard" : "home"; render(); });
     document.getElementById("retry-btn").addEventListener("click", () => {
       const filter = state.quiz.domainFilter;
       const label = state.quiz.label;
@@ -1718,6 +1804,7 @@ const VOCAB_SETS = [
     else if (state.view === "weak") renderWeak();
     else if (state.view === "flash") renderFlash();
     else if (state.view === "bank") renderBank();
+    else if (state.view === "hard") renderHard();
     else if (state.view === "plan") renderPlan();
   }
 

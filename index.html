@@ -1170,23 +1170,24 @@ const VOCAB_SETS = [
     const seen = new Set();
     const attempts = hist.map(a => {
       let nC=0,nT=0,rC=0,rT=0;
-      a.items.forEach(it => { if (it[3]) return; if (seen.has(it[0])){ rT++; rC+=it[1]; } else { nT++; nC+=it[1]; } });
+      if (!a.partial) a.items.forEach(it => { if (it[3]) return; if (seen.has(it[0])){ rT++; rC+=it[1]; } else { nT++; nC+=it[1]; } });
       a.items.forEach(it => { if (!it[3]) seen.add(it[0]); });
-      return { attempt:a.attempt, date:a.date, pct:Math.round(100*a.score/a.total), newPct: nT ? Math.round(100*nC/nT) : null, nT, rT, rPct: rT ? Math.round(100*rC/rT) : null, src:a.src };
+      return { attempt:a.attempt, partial:!!a.partial, date:a.date, pct:Math.round(100*a.score/a.total), newPct: nT ? Math.round(100*nC/nT) : null, nT, rT, rPct: rT ? Math.round(100*rC/rT) : null, src:a.src };
     });
     const tot = (list, f) => { let c=0,t=0; list.forEach(a => a.items.forEach(it => { if (f(it)){ t++; c+=it[1]; } })); return [c,t]; };
-    const last3 = hist.slice(-3);
+    const fullHist = hist.filter(a => !a.partial);
+    const last3 = fullHist.slice(-3);
     const domains = DOMAINS.map((d,i) => {
       const n = String(i+1);
-      const all = tot(hist, it => it[2][0] === n), l3 = tot(last3, it => it[2][0] === n);
+      const all = tot(fullHist, it => it[2][0] === n), l3 = tot(last3, it => it[2][0] === n);
       return { d:n, name:d.key, weight:d.weight, all, l3, misses: all[1]-all[0] };
     });
     const objMap = {};
-    hist.forEach(a => a.items.forEach(it => { const o = objMap[it[2]] || (objMap[it[2]] = [0,0]); o[1]++; o[0]+=it[1]; }));
+    fullHist.forEach(a => a.items.forEach(it => { const o = objMap[it[2]] || (objMap[it[2]] = [0,0]); o[1]++; o[0]+=it[1]; }));
     const objs = Object.keys(objMap).map(k => ({ obj:k, c:objMap[k][0], t:objMap[k][1], miss: 1 - objMap[k][0]/objMap[k][1] }))
       .filter(o => o.t >= 8).sort((a,b) => b.miss - a.miss);
     let nC=0,nT=0,rC=0,rT=0; attempts.forEach(a => { if (a.newPct!=null){ nT+=a.nT; nC+=Math.round(a.newPct*a.nT/100);} if (a.rPct!=null){ rT+=a.rT; rC+=Math.round(a.rPct*a.rT/100);} });
-    return { attempts, domains, objs, newOverall: nT ? Math.round(100*nC/nT) : null, repOverall: rT ? Math.round(100*rC/rT) : null, totalQ: hist.reduce((s,a)=>s+a.items.length,0), totalMiss: hist.reduce((s,a)=>s+a.items.filter(i=>!i[1]).length,0) };
+    return { attempts, domains, objs, newOverall: nT ? Math.round(100*nC/nT) : null, repOverall: rT ? Math.round(100*rC/rT) : null, totalQ: fullHist.reduce((s,a)=>s+a.items.length,0), totalMiss: fullHist.reduce((s,a)=>s+a.items.filter(i=>!i[1]).length,0), partialCount: hist.length - fullHist.length };
   }
   const OBJ_NAMES = {"1.1":"Security controls","1.2":"Fundamental concepts (CIA, AAA, Zero Trust, physical, deception)","1.3":"Change management","1.4":"Cryptographic solutions","2.1":"Threat actors & motivations","2.2":"Threat vectors & attack surfaces","2.3":"Vulnerability types","2.4":"Indicators of malicious activity","2.5":"Mitigation techniques","3.1":"Architecture models","3.2":"Secure enterprise infrastructure","3.3":"Protecting data","3.4":"Resilience & recovery","4.1":"Secure baselines & hardening","4.2":"Asset management","4.3":"Vulnerability management","4.4":"Alerting & monitoring","4.5":"Modify enterprise security (firewall, email, web filter)","4.6":"Identity & access management","4.7":"Automation & orchestration","4.8":"Incident response","4.9":"Data sources for investigations","5.1":"Security governance","5.2":"Risk management","5.3":"Third-party risk","5.4":"Compliance","5.5":"Audits & assessments","5.6":"Security awareness"};
 
@@ -1213,7 +1214,7 @@ const VOCAB_SETS = [
       st.textContent = "Reading " + file.name + "…";
       try {
         const rec = await DionParser.parseFile(file);
-        const entry = { attempt: rec.attempt, date: rec.date, score: rec.score, total: rec.total, src: "upload",
+        const entry = { attempt: rec.attempt, date: rec.date, score: rec.score, total: rec.total, src: "upload", partial: !!rec.partial,
           items: rec.items.map(i => [i.k, i.ok ? 1 : 0, i.obj].concat(i.pbq ? [i.pbq] : [])) };
         const ups = loadUploads().filter(a => a.attempt !== entry.attempt); ups.push(entry);
         if (!saveUploads(ups)) throw new Error("Couldn't save to this browser's storage.");
@@ -1254,6 +1255,7 @@ const VOCAB_SETS = [
         <h2>Dion practice exams: ${st.attempts.length} attempts</h2>
         <p class="muted">${st.totalQ} questions, ${st.totalMiss} missed. Latest: attempt ${last.attempt} (${esc(last.date)}) at ${last.pct}%. The dots show your score on questions you had never seen before, which is the honest read on understanding.</p>
         ${attemptChart(st.attempts)}
+        ${st.partialCount ? `<p class="muted" style="font-size:12px;margin-top:6px;">Attempt ${st.attempts.filter(x=>x.partial).map(x=>x.attempt).join(", ")} was saved from a results page filtered to missed questions, so its score is charted but it isn't counted in the per-domain or first-seen numbers.</p>` : ""}
       </div>
       <div class="card">
         <h2>Memorizing vs understanding</h2>

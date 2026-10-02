@@ -103,6 +103,11 @@
       const buf = await file.arrayBuffer();
       const lines = await pdfToLines(buf);
       const rec = parseLines(lines);
+      const allWrong = rec.items.length > 0 && rec.items.every(i => !i.ok);
+      if (rec.items.length < rec.total * 0.8 && allWrong && rec.items.length === rec.total - rec.score){
+        rec.partial = true; // filtered to "Incorrect" only
+        return rec;
+      }
       if (rec.items.length < rec.total * 0.8){
         throw new Error(`Only found ${rec.items.length} of ${rec.total} questions. Make sure you saved the full results page with "All Questions" selected.`);
       }

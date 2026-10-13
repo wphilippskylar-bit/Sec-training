@@ -265,6 +265,7 @@ const ACRONYM_BANK = [{"a": "2FA", "e": "Two-factor Authentication"}, {"a": "3DE
 <script src="bank/hard_d4b.js"></script>
 <script src="bank/hard_d5.js"></script>
 <script src="plan.js"></script>
+<script src="keywords.js"></script>
 <script>
 // ===== Weak-spot data built from Phil's Dion Training practice exams (7 attempts, Sep 2026) =====
 // Question stems are paraphrased summaries of missed concepts, not reproduced exam items.
@@ -356,8 +357,8 @@ const PORT_TABLE = [
   ["IPSec IKE", "500 (4500 NAT-T)", "UDP", "IPSec VPN key exchange", 1],
   ["Syslog", "514", "UDP", "plain syslog messages", 1],
   ["LPR/LPD", "515", "TCP", "Windows / line printer printing", 1],
-  ["LDAPS", "636", "TCP", "encrypted directory queries", 0],
-  ["IMAPS", "993", "TCP", "encrypted IMAP", 0],
+  ["LDAPS", "636", "TCP", "encrypted directory queries", 1],
+  ["IMAPS", "993", "TCP", "encrypted IMAP", 1],
   ["POP3S", "995", "TCP", "encrypted POP3", 0],
   ["MS SQL Server", "1433", "TCP", "Microsoft SQL Server database queries", 1],
   ["Oracle DB", "1521", "TCP", "Oracle database connections", 1],
@@ -1145,7 +1146,7 @@ const VOCAB_SETS = [
 
 
   function tabs(){
-    const t = [["home","Practice"],["bank","Question Bank"],["hard","Hard Mode"],["analysis","Dion Analysis"],["weak","Weak Spots"],["plan","Test Day Plan"]];
+    const t = [["home","Practice"],["bank","Question Bank"],["hard","Hard Mode"],["analysis","Dion Analysis"],["weak","Weak Spots"],["plan","Test Day Plan"],["keys","Keywords"]];
     const cur = (state.view === "flash") ? "weak" : state.view;
     return `<div class="tabs">${t.map(x => `<button class="tab-btn ${cur===x[0]?"active":""}" data-tab="${x[0]}">${x[1]}</button>`).join("")}</div>`;
   }
@@ -1278,7 +1279,7 @@ const VOCAB_SETS = [
         <h2>Firewall rules &amp; ports</h2>
         <p class="muted">The firewall sim is the one PBQ you've never fully passed. Rules of thumb:</p>
         <ul class="tight">${fw}</ul>
-        <div class="tbl-wrap"><table class="dt"><tr><th>Service</th><th>Port</th><th>Protocol</th></tr>${ports}</table></div>
+        <p class="muted">Full port &amp; protocol list now lives on the <b>Keywords</b> tab.</p>
         <div class="btn-row" style="justify-content:flex-start; gap:10px; flex-wrap:wrap;">
           <button class="btn btn-primary btn-sm" data-drill="${FIREWALL_KEY}">Firewall rule drill (${FIREWALL_DRILLS.length})</button>
           <button class="btn btn-ghost btn-sm" data-drill="${PORTS_KEY}">Port drill (30)</button>
@@ -1402,6 +1403,7 @@ const VOCAB_SETS = [
   }
   function alertInline(el, msg){ const s = el.querySelector(".m-sub"); if (s) s.textContent = msg; }
 
+  function renderKeywords(){ if (window.renderKeywordsImpl) return window.renderKeywordsImpl({app, header, tabs, wireTabs, render, ports: (typeof PORT_TABLE!=="undefined"?PORT_TABLE:null)}); app.innerHTML = header()+tabs()+'<div class="card muted">Keyword sheet failed to load.</div>'; wireTabs(); }
   function renderPlan(){ if (window.renderPlanImpl) return window.renderPlanImpl({app, header, tabs, wireTabs, startQuiz, BANK_PREFIX, uploadCardHtml, wireUpload, computeStats, getHistory, esc, targetWeights, OBJ_NAMES, state, render}); app.innerHTML = header()+tabs()+'<div class="card muted">Plan coming soon.</div>'; wireTabs(); }
   function renderWeak(){
     const known = loadKnown();
@@ -1808,6 +1810,7 @@ const VOCAB_SETS = [
     else if (state.view === "bank") renderBank();
     else if (state.view === "hard") renderHard();
     else if (state.view === "plan") renderPlan();
+    else if (state.view === "keys") renderKeywords();
   }
 
   (async function init(){

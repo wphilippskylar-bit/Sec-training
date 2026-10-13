@@ -1,4 +1,4 @@
-const CACHE_NAME = "secplus-console-v3";
+const CACHE_NAME = "secplus-console-v4";
 const PRECACHE_URLS = [
   "./",
   "./index.html",
@@ -41,13 +41,14 @@ self.addEventListener("activate", (e) => {
 
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
+  // Network-first: online = always latest push; offline = cached copy.
   e.respondWith(
-    caches.match(e.request, { ignoreSearch: true }).then((hit) => hit || fetch(e.request).then((res) => {
+    fetch(e.request).then((res) => {
       if (res && res.ok && new URL(e.request.url).origin === location.origin) {
         const copy = res.clone();
         caches.open(CACHE_NAME).then((c) => c.put(e.request, copy));
       }
       return res;
-    }).catch(() => caches.match("./index.html")))
+    }).catch(() => caches.match(e.request, { ignoreSearch: true }).then((hit) => hit || caches.match("./index.html")))
   );
 });

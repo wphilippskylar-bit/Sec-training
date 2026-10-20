@@ -1,54 +1,18 @@
-const CACHE_NAME = "secplus-console-v4";
-const PRECACHE_URLS = [
-  "./",
-  "./index.html",
-  "./game.html",
-  "./manifest.json",
-  "./keywords.js",
-  "./dion-history.js",
-  "./dion-parser.js",
-  "./plan.js",
-  "./bank/d1.js",
-  "./bank/d2a.js",
-  "./bank/d2b.js",
-  "./bank/d3.js",
-  "./bank/d4a.js",
-  "./bank/d4b.js",
-  "./bank/d5.js",
-  "./bank/hard_d1.js",
-  "./bank/hard_d2a.js",
-  "./bank/hard_d2b.js",
-  "./bank/hard_d3.js",
-  "./bank/hard_d4a.js",
-  "./bank/hard_d4b.js",
-  "./bank/hard_d5.js",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png",
-  "./icons/icon-512-maskable.png",
-  "./icons/apple-touch-icon.png"
-];
-
-self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(CACHE_NAME).then((c) => c.addAll(PRECACHE_URLS)).then(() => self.skipWaiting()));
+/* Network-first service worker: online = always the latest version; offline = the cached copy. */
+var CACHE = 'secplusrange-1bc2d57c40';
+var CORE = ['./', './index.html', './game.html', './manifest.json', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
+self.addEventListener('install', function (e) {
+  e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(CORE); }).then(function () { return self.skipWaiting(); }));
 });
-
-self.addEventListener("activate", (e) => {
-  e.waitUntil(
-    caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))))
-      .then(() => self.clients.claim())
-  );
+self.addEventListener('activate', function (e) {
+  e.waitUntil(caches.keys().then(function (keys) {
+    return Promise.all(keys.filter(function (k) { return k !== CACHE; }).map(function (k) { return caches.delete(k); }));
+  }).then(function () { return self.clients.claim(); }));
 });
-
-self.addEventListener("fetch", (e) => {
-  if (e.request.method !== "GET") return;
-  // Network-first: online = always latest push; offline = cached copy.
-  e.respondWith(
-    fetch(e.request).then((res) => {
-      if (res && res.ok && new URL(e.request.url).origin === location.origin) {
-        const copy = res.clone();
-        caches.open(CACHE_NAME).then((c) => c.put(e.request, copy));
-      }
-      return res;
-    }).catch(() => caches.match(e.request, { ignoreSearch: true }).then((hit) => hit || caches.match("./index.html")))
-  );
+self.addEventListener('fetch', function (e) {
+  if (e.request.method !== 'GET') return;
+  e.respondWith(fetch(e.request).then(function (res) {
+    if (res && res.ok && new URL(e.request.url).origin === location.origin) { var copy = res.clone(); caches.open(CACHE).then(function (c) { c.put(e.request, copy); }); }
+    return res;
+  }).catch(function () { return caches.match(e.request, { ignoreSearch: true }).then(function (hit) { return hit || caches.match('./index.html'); }); }));
 });

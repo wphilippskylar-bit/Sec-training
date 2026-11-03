@@ -1392,7 +1392,7 @@ window.COURSE = {
   var shuffle = function (a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; };
   var PASS = C.passPct || 90;
   var INCL = !!C.passInclusive; // true: PASS% or better passes; false: must score OVER PASS%
-  function passOk(pct) { return INCL ? pct >= PASS : pct > PASS; }
+  function passOk(pct) { return INCL ? pct >= PASS : pct >= PASS; }
   var PW = INCL ? PASS + '% or better' : 'over ' + PASS + '%';
   function needN(n) { return INCL ? Math.ceil(n * PASS / 100 - 1e-9) : Math.floor(n * PASS / 100 + 1); }
 

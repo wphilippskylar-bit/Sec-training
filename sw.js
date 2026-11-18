@@ -1,5 +1,5 @@
 /* Network-first service worker: online = always the latest version; offline = the cached copy. */
-var CACHE = 'secplusrange-536fae76d0';
+var CACHE = 'secplusrange-79694214d3';
 var CORE = ['./', './index.html', './game.html', './manifest.json', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(CORE); }).then(function () { return self.skipWaiting(); }));

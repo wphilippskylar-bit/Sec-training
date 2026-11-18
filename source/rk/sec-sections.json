@@ -1,0 +1,386 @@
+{
+ "o1_1": [
+  {
+   "h": "Two questions for every control",
+   "html": "<p>The exam describes a control and asks you to classify it. Ask two questions:</p><ol><li><b>Category — HOW is it implemented?</b> By technology, by management policy, by people doing a process, or physically.</li><li><b>Type — WHAT does it do?</b> Stop it, discourage it, notice it, fix it, stand in for something, or tell people what to do.</li></ol><p>One control has <b>one category and one primary type</b>. A badge reader is Physical (category) and Preventive (type).</p>"
+  },
+  {
+   "h": "Categories",
+   "html": "<table><tr><th>Category</th><th>Meaning</th><th>Examples</th></tr><tr><td><b>Technical</b> (logical)</td><td>Implemented by systems</td><td>Firewall, encryption, MFA, antivirus, ACLs</td></tr><tr><td><b>Managerial</b> (administrative)</td><td>Decisions and oversight: policies, risk</td><td>Risk assessment, security policy, hiring standards</td></tr><tr><td><b>Operational</b></td><td>Day-to-day procedures carried out by <i>people</i></td><td>Guards patrolling, log review, backups, awareness training delivery</td></tr><tr><td><b>Physical</b></td><td>Tangible barriers in the real world</td><td>Fences, locks, bollards, mantraps, lighting</td></tr></table><div class=\"callout trap\"><b class=\"k\">Trap</b>Managerial = deciding and documenting. Operational = people doing the task. \"A guard checks badges\" is operational; \"a policy requires badges\" is managerial.</div>"
+  },
+  {
+   "h": "Types",
+   "html": "<table><tr><th>Type</th><th>Job</th><th>Example</th></tr><tr><td><b>Preventive</b></td><td>Stops the event before it happens</td><td>Firewall deny rule, door lock, least privilege</td></tr><tr><td><b>Deterrent</b></td><td>Discourages an attempt (doesn't physically stop it)</td><td>Warning sign, visible camera, login banner</td></tr><tr><td><b>Detective</b></td><td>Identifies/records an event during or after</td><td>IDS, SIEM alerts, log review, motion sensor</td></tr><tr><td><b>Corrective</b></td><td>Limits damage and restores after the event</td><td>Restore from backup, patch after exploit, quarantine</td></tr><tr><td><b>Compensating</b></td><td>An alternative when the primary control can't be used</td><td>Segmenting a legacy system that can't be patched</td></tr><tr><td><b>Directive</b></td><td>Tells people what to do (relies on compliance)</td><td>Policy, \"authorized personnel only\" sign, AUP</td></tr></table>"
+  },
+  {
+   "h": "How to answer",
+   "html": "<ul><li><b>Timing</b> is the fastest clue: before → preventive/deterrent; during/after noticing → detective; after, fixing → corrective.</li><li><b>\"Can't / unable / legacy / instead\"</b> → compensating.</li><li><b>Sign or banner</b>: if it warns of consequences → deterrent; if it instructs → directive.</li><li>A camera that is <i>monitored or recorded</i> is detective; a <i>visible</i> camera meant to scare people off is deterrent. Read for intent.</li></ul>"
+  }
+ ],
+ "o1_2": [
+  {
+   "h": "CIA triad + non-repudiation",
+   "html": "<ul><li><b>Confidentiality</b> — only authorized people can read it (encryption, access control).</li><li><b>Integrity</b> — it hasn't been altered (hashing, digital signatures, FIM).</li><li><b>Availability</b> — it's there when needed (redundancy, backups, DDoS protection).</li><li><b>Non-repudiation</b> — the sender can't deny sending it: <b>digital signatures</b> (private key) give proof of origin + integrity.</li></ul>"
+  },
+  {
+   "h": "AAA",
+   "html": "<p><b>Authentication</b> proves identity (password, MFA, certificate). <b>Authorization</b> decides what that identity may do (permissions, roles). <b>Accounting</b> records what it did (logs, audit trails). Authenticate <b>people</b> and <b>systems</b> (device certificates, 802.1X). Authorization models appear in 4.6.</p>"
+  },
+  {
+   "h": "Gap analysis",
+   "html": "<p>Compare <b>where you are</b> (current state) with <b>where you need to be</b> (a framework or target state, e.g. NIST CSF or ISO 27001), then list the gaps and a plan to close them.</p>"
+  },
+  {
+   "h": "Zero Trust",
+   "html": "<p>Never trust based on network location — <b>verify every request</b> (identity, device posture, context) and grant least privilege.</p><table><tr><th>Control plane (decides)</th><th>Data plane (enforces)</th></tr><tr><td><b>Policy Engine</b> — makes the allow/deny decision<br><b>Policy Administrator</b> — tells the enforcement point to open/close the session<br><b>Adaptive identity</b>, threat scope reduction, policy-driven access control</td><td><b>Policy Enforcement Point (PEP)</b> — the gate traffic actually passes through<br>Subject/system → PEP → resource<br><b>Implicit trust zones</b> — the area behind the PEP</td></tr></table><p>Memory hook: judge (engine) decides, clerk (administrator) does the paperwork, bailiff (PEP) guards the door.</p>"
+  },
+  {
+   "h": "Physical security & deception",
+   "html": "<ul><li><b>Bollards</b> (stop vehicles), <b>access control vestibule</b> (mantrap — stops tailgating), fencing, lighting, guards, <b>access badges</b>, video surveillance.</li><li>Sensors: <b>infrared</b> (heat/motion), <b>pressure</b>, <b>microwave</b>, <b>ultrasonic</b>.</li><li>Deception: <b>honeypot</b> (one fake system), <b>honeynet</b> (a network of them), <b>honeyfile</b> (bait file that alerts when opened), <b>honeytoken</b> (fake credential/record that alerts when used). They waste attacker time and generate high-fidelity alerts.</li></ul>"
+  }
+ ],
+ "o1_3": [
+  {
+   "h": "Business processes",
+   "html": "<ul><li><b>Approval process</b> — usually a Change Advisory Board (CAB) approves.</li><li><b>Ownership</b> — a named owner is accountable for the change.</li><li><b>Stakeholders</b> — everyone affected is identified and informed.</li><li><b>Impact analysis</b> — what could break, what risk is introduced.</li><li><b>Test results</b> — proof it works in a test/staging environment first.</li><li><b>Backout plan</b> — how to roll back if it fails (rollback ≠ \"hope\").</li><li><b>Maintenance window</b> — scheduled time with least business impact.</li><li><b>SOP</b> — standard operating procedure for routine changes.</li></ul>"
+  },
+  {
+   "h": "Technical implications",
+   "html": "<ul><li><b>Allow/deny lists</b> may need updating for new software.</li><li><b>Restricted activities</b> — change only what was approved (scope).</li><li><b>Downtime</b>, <b>service restart</b>, <b>application restart</b> — plan and communicate.</li><li><b>Legacy applications</b> may break; <b>dependencies</b> must be mapped.</li></ul>"
+  },
+  {
+   "h": "Documentation & version control",
+   "html": "<p>After the change: <b>update diagrams</b>, <b>update policies/procedures</b>, and use <b>version control</b> for configs and code so you can see and revert exactly what changed.</p><div class=\"callout pro\"><b class=\"k\">Why security cares</b>Unapproved or untested changes are a top cause of outages and new vulnerabilities. Change management keeps <i>availability</i> and <i>integrity</i>.</div>"
+  }
+ ],
+ "o1_4": [
+  {
+   "h": "Symmetric vs asymmetric",
+   "html": "<table><tr><th></th><th>Symmetric</th><th>Asymmetric</th></tr><tr><td>Keys</td><td>One shared secret</td><td>Public/private key pair</td></tr><tr><td>Speed</td><td>Fast — bulk data</td><td>Slow — small data, key exchange, signatures</td></tr><tr><td>Examples</td><td>AES, ChaCha20 (3DES/DES legacy)</td><td>RSA, ECC, Diffie-Hellman (key exchange)</td></tr></table><p>Real systems combine them: asymmetric to exchange a session key, symmetric to encrypt the data (that's TLS).</p><ul><li><b>Encrypt for someone</b> → their <b>public</b> key. Only their private key decrypts.</li><li><b>Sign</b> → your <b>private</b> key. Anyone verifies with your public key → integrity + non-repudiation.</li></ul>"
+  },
+  {
+   "h": "Hashing, salting, stretching",
+   "html": "<ul><li><b>Hash</b> (SHA-256): one-way fingerprint; any change → different hash. Integrity, password storage. MD5/SHA-1 are broken (collisions).</li><li><b>Salt</b>: random value added per password before hashing → defeats rainbow tables, identical passwords get different hashes.</li><li><b>Key stretching</b> (PBKDF2, bcrypt, Argon2): many iterations → brute force is slower.</li><li><b>Digital signature</b> = hash the message, encrypt the hash with the private key.</li></ul>"
+  },
+  {
+   "h": "Where encryption happens",
+   "html": "<p>Levels: <b>full-disk</b> (BitLocker, FileVault), <b>partition</b>, <b>volume</b>, <b>file</b>, <b>database</b>, <b>record</b> (a single row/field). <b>Transport</b> encryption: TLS, IPsec, VPN. Key length matters (AES-256 vs 128); <b>key exchange</b> (Diffie-Hellman) lets two parties agree on a secret over an open channel.</p><table><tr><th>Tool</th><th>What it is</th></tr><tr><td><b>TPM</b></td><td>Chip on the motherboard: stores keys for one device, measured/secure boot, BitLocker</td></tr><tr><td><b>HSM</b></td><td>Dedicated appliance/card that generates and protects keys at scale (CAs, payment)</td></tr><tr><td><b>KMS</b></td><td>Key management system (often cloud) — lifecycle and rotation</td></tr><tr><td><b>Secure enclave</b></td><td>Isolated processor area for secrets (phones)</td></tr></table>"
+  },
+  {
+   "h": "Obfuscation",
+   "html": "<ul><li><b>Steganography</b> — hide data inside other data (an image).</li><li><b>Tokenization</b> — replace sensitive data with a token; the mapping lives in a secure vault (card numbers).</li><li><b>Data masking</b> — show only part (***-**-1234).</li></ul>"
+  },
+  {
+   "h": "PKI & certificates",
+   "html": "<ul><li><b>CA</b> signs certificates; trust flows root CA → intermediate → leaf. <b>Self-signed</b> = no third-party trust.</li><li><b>CSR</b> (certificate signing request) is what you send a CA; it contains your public key.</li><li><b>Wildcard</b> (*.example.com) covers subdomains; <b>SAN</b> lists multiple names.</li><li>Revocation: <b>CRL</b> (a published list) vs <b>OCSP</b> (real-time query); <b>OCSP stapling</b> — the server attaches the response.</li><li><b>Key escrow</b> — a trusted third party holds a copy of keys for recovery.</li><li><b>Blockchain</b> — distributed, append-only ledger; <b>open public ledger</b>.</li></ul>"
+  }
+ ],
+ "o2_1": [
+  {
+   "h": "Actors",
+   "html": "<table><tr><th>Actor</th><th>Resources / sophistication</th><th>Typical motivation</th></tr><tr><td><b>Nation-state</b></td><td>Highest; APTs that persist for months</td><td>Espionage, war/disruption of infrastructure, political</td></tr><tr><td><b>Unskilled attacker</b></td><td>Low; uses others' tools/scripts</td><td>Thrill, notoriety, disruption</td></tr><tr><td><b>Hacktivist</b></td><td>Varies</td><td>Philosophical/political beliefs — defacement, leaks, DDoS</td></tr><tr><td><b>Insider threat</b></td><td>Has legitimate access</td><td>Revenge, financial gain, (or careless mistakes)</td></tr><tr><td><b>Organized crime</b></td><td>High; well funded</td><td>Financial gain — ransomware, fraud, data theft</td></tr><tr><td><b>Shadow IT</b></td><td>Employees, no malicious intent</td><td>Convenience — unapproved apps/cloud create risk</td></tr></table>"
+  },
+  {
+   "h": "Attributes",
+   "html": "<ul><li><b>Internal vs external</b> — inside the organization or not.</li><li><b>Resources/funding</b> — nation-state and organized crime are highest.</li><li><b>Level of sophistication/capability</b>.</li></ul>"
+  },
+  {
+   "h": "Motivations",
+   "html": "<p>Data exfiltration · espionage · service disruption · blackmail · financial gain · philosophical/political beliefs · ethical (white-hat disclosure) · revenge · disruption/chaos · war.</p><div class=\"callout trap\"><b class=\"k\">Trap</b>Motivation is <b>why</b>, not what happened. Encrypted files is the <i>effect</i>; financial gain (ransom) is the <i>motivation</i>. Insider vs Shadow IT turns on <b>malicious intent</b>.</div>"
+  }
+ ],
+ "o2_2": [
+  {
+   "h": "Vectors",
+   "html": "<ul><li><b>Message-based</b>: email, SMS (smishing), instant messaging.</li><li><b>Image-based</b> and <b>file-based</b> (malicious attachments, macros), <b>voice call</b> (vishing), <b>removable device</b> (USB drops).</li><li><b>Vulnerable software</b>: <b>client-based</b> (agent installed) vs <b>agentless</b>; <b>unsupported systems and applications</b> (end-of-life, no patches).</li><li><b>Unsecure networks</b>: wireless, wired, Bluetooth.</li><li><b>Open service ports</b>, <b>default credentials</b>.</li><li><b>Supply chain</b>: managed service providers (MSPs), vendors, suppliers.</li></ul>"
+  },
+  {
+   "h": "Human vectors / social engineering",
+   "html": "<table><tr><th>Term</th><th>Clue</th></tr><tr><td>Phishing</td><td>Broad email lure</td></tr><tr><td>Spear phishing / whaling</td><td>Targeted / targets executives</td></tr><tr><td>Vishing / smishing</td><td>Voice / SMS</td></tr><tr><td>Misinformation / disinformation</td><td>False info (accidental / deliberate)</td></tr><tr><td>Impersonation, pretexting</td><td>Pretending to be someone with a made-up story</td></tr><tr><td>Business email compromise (BEC)</td><td>Compromised/spoofed exec or vendor account asks for payment change</td></tr><tr><td>Watering hole</td><td>Compromise a site the targets visit</td></tr><tr><td>Brand impersonation</td><td>Fake site/emails using a known brand</td></tr><tr><td>Typosquatting</td><td>Look-alike domain: examp1e.com</td></tr></table>"
+  }
+ ],
+ "o2_3": [
+  {
+   "h": "Application",
+   "html": "<ul><li><b>Memory injection</b>, <b>buffer overflow</b> (writing past a buffer's end), <b>race condition</b> — including <b>TOCTOU</b> (time-of-check to time-of-use).</li><li><b>Malicious update</b> — a trusted update channel delivers malware.</li></ul>"
+  },
+  {
+   "h": "Web",
+   "html": "<ul><li><b>SQL injection</b> — input changes the meaning of a database query. Fix: parameterized queries, input validation.</li><li><b>Cross-site scripting (XSS)</b> — attacker-supplied script runs in other users' browsers. Fix: output encoding, CSP, input validation.</li></ul>"
+  },
+  {
+   "h": "Platform & hardware",
+   "html": "<ul><li>OS-based flaws; <b>firmware</b>; <b>end-of-life / legacy</b> hardware.</li><li>Virtualization: <b>VM escape</b> (break out to the hypervisor), <b>resource reuse</b> (data left in reallocated memory/disk).</li><li><b>Cloud-specific</b>: misconfigured storage, exposed keys.</li><li><b>Supply chain</b>: service, hardware or software providers.</li><li><b>Cryptographic</b>: weak algorithms, bad key handling.</li><li><b>Misconfiguration</b>: open ports, default settings, permissive permissions.</li><li>Mobile: <b>side loading</b> (apps from outside the store), <b>jailbreaking/rooting</b>.</li><li><b>Zero-day</b>: unknown to the vendor; no patch exists yet.</li></ul>"
+  }
+ ],
+ "o2_4": [
+  {
+   "h": "Malware by symptom",
+   "html": "<table><tr><th>Malware</th><th>Tell-tale sign</th></tr><tr><td>Ransomware</td><td>Files encrypted, ransom note</td></tr><tr><td>Trojan</td><td>Looks legitimate, hides malicious function</td></tr><tr><td>Worm</td><td>Spreads by itself across the network</td></tr><tr><td>Virus</td><td>Needs a host file/user action to spread</td></tr><tr><td>Spyware / keylogger</td><td>Watches activity / records keystrokes</td></tr><tr><td>Rootkit</td><td>Hides deep in the OS (kernel), evades tools</td></tr><tr><td>Logic bomb</td><td>Triggers on a date/event</td></tr><tr><td>Bloatware</td><td>Unwanted preinstalled software</td></tr></table>"
+  },
+  {
+   "h": "Network & application attacks",
+   "html": "<ul><li><b>DDoS</b> (amplified/reflected — small request, big response sent to the victim), <b>DNS attacks</b>, <b>on-path</b> (man-in-the-middle), <b>credential replay</b>, wireless attacks.</li><li><b>Injection</b>, <b>buffer overflow</b>, <b>replay</b>, <b>privilege escalation</b>, <b>forgery</b> (CSRF/SSRF), <b>directory traversal</b> (<code>../../etc/passwd</code>).</li><li>Physical: brute force (forcing a door), <b>RFID cloning</b>, environmental.</li><li>Crypto: <b>downgrade</b> (force weaker protocol), <b>collision</b>, <b>birthday</b>.</li></ul>"
+  },
+  {
+   "h": "Password attacks",
+   "html": "<ul><li><b>Brute force</b>: many passwords against <b>one</b> account → lockouts on one user.</li><li><b>Password spraying</b>: one or a few common passwords against <b>many</b> accounts → a few failures per user across many users, avoiding lockout.</li><li>Dictionary, credential stuffing (reusing leaked username/password pairs).</li></ul>"
+  },
+  {
+   "h": "Indicators",
+   "html": "<p>Account lockout · concurrent session usage · blocked content · <b>impossible travel</b> (logins from two distant places minutes apart) · resource consumption · resource inaccessibility · out-of-cycle logging · published/documented (the data shows up online) · missing logs (attacker covering tracks).</p>"
+  }
+ ],
+ "o2_5": [
+  {
+   "h": "The mitigation toolbox",
+   "html": "<ul><li><b>Segmentation</b> — split the network so a breach can't spread (VLANs, subnets, microsegmentation).</li><li><b>Access control</b> — ACLs and permissions.</li><li><b>Application allow list</b> — only approved software runs (stronger than a deny list).</li><li><b>Isolation</b> — quarantine a suspect host.</li><li><b>Patching</b>, <b>encryption</b>, <b>monitoring</b>, <b>least privilege</b>.</li><li><b>Configuration enforcement</b> — baselines pushed and checked (GPO, MDM, config management).</li><li><b>Decommissioning</b> — retire systems properly (wipe, remove from inventory/DNS).</li></ul>"
+  },
+  {
+   "h": "Hardening techniques",
+   "html": "<ul><li>Encryption, installing <b>endpoint protection</b> (EDR), <b>host-based firewall</b>, <b>HIPS</b>.</li><li><b>Disable ports/protocols</b> and services you don't need.</li><li><b>Change default passwords</b>.</li><li><b>Remove unnecessary software</b> — smaller attack surface.</li></ul>"
+  }
+ ],
+ "o3_1": [
+  {
+   "h": "Cloud and responsibility",
+   "html": "<table><tr><th>Model</th><th>You manage</th><th>Provider manages</th></tr><tr><td>IaaS</td><td>OS, apps, data, config</td><td>Hardware, hypervisor, facility</td></tr><tr><td>PaaS</td><td>Apps, data</td><td>Runtime, OS, infrastructure</td></tr><tr><td>SaaS</td><td>Data, users, access</td><td>Almost everything else</td></tr></table><p>The <b>responsibility matrix</b> (shared responsibility model) defines who secures what. <b>Hybrid</b> = on-prem + cloud. <b>Third-party vendors</b> add supply-chain risk.</p>"
+  },
+  {
+   "h": "Modern architecture",
+   "html": "<ul><li><b>Infrastructure as Code (IaC)</b> — infrastructure defined in templates: repeatable, reviewable, but a bad template replicates mistakes everywhere.</li><li><b>Serverless</b> — run functions without managing servers; provider handles the OS.</li><li><b>Microservices</b> — small independent services talking over APIs; more API surface to secure.</li><li><b>Network infrastructure</b>: physical isolation (<b>air gap</b>), logical segmentation, <b>SDN</b> (software-defined networking — control plane separated from data plane).</li><li><b>Centralized vs decentralized</b> — single point of control/failure vs distributed resilience but harder governance.</li><li><b>Containerization</b> (share the host kernel, lightweight) vs <b>virtualization</b> (full guest OS on a hypervisor).</li></ul>"
+  },
+  {
+   "h": "Specialized systems",
+   "html": "<ul><li><b>IoT</b> — weak defaults, rarely patched → segment them.</li><li><b>ICS/SCADA</b> — industrial control; availability and safety first, legacy protocols → isolate/air-gap.</li><li><b>RTOS</b> — real-time OS with strict timing (vehicles, medical).</li><li><b>Embedded systems</b> — fixed-function, hard to patch.</li><li><b>High availability</b> — redundancy so a failure doesn't stop service.</li></ul><p>Considerations the exam lists: availability, resilience, cost, responsiveness, scalability, ease of deployment, risk transference, ease of recovery, patch availability, inability to patch, power, compute.</p>"
+  }
+ ],
+ "o3_2": [
+  {
+   "h": "Placement, zones, failure modes",
+   "html": "<ul><li><b>Security zones</b>: internet (untrusted) → <b>screened subnet/DMZ</b> (public-facing servers) → internal → restricted. Place devices by what must reach them.</li><li><b>Fail-open</b> keeps traffic flowing if the device fails (availability); <b>fail-closed</b> blocks everything (security).</li><li><b>Inline / active</b> devices sit in the traffic path and can block (IPS); <b>tap / monitor / passive</b> devices see a copy and only alert (IDS).</li></ul>"
+  },
+  {
+   "h": "Appliances",
+   "html": "<table><tr><th>Device</th><th>Purpose</th></tr><tr><td>Jump server</td><td>Hardened host admins go through to reach secure zones</td></tr><tr><td>Proxy server</td><td>Makes requests on behalf of clients; filtering, caching (reverse proxy = in front of servers)</td></tr><tr><td>IDS / IPS</td><td>Detect / detect + block (signature or anomaly)</td></tr><tr><td>Load balancer</td><td>Spreads traffic across servers (active/active, active/passive)</td></tr><tr><td>Sensors</td><td>Collect traffic/data for monitoring</td></tr><tr><td>WAF</td><td>Layer-7 firewall for web apps (SQLi, XSS)</td></tr><tr><td>UTM</td><td>All-in-one: firewall, IPS, AV, filtering</td></tr><tr><td>NGFW</td><td>Application-aware firewall with IPS and identity</td></tr><tr><td>Layer 4 vs Layer 7 firewall</td><td>Ports/IPs vs application content</td></tr></table>"
+  },
+  {
+   "h": "Port security & secure communication",
+   "html": "<ul><li><b>802.1X</b> port-based NAC with <b>EAP</b>, usually backed by RADIUS — authenticate before the port passes traffic.</li><li><b>VPN</b>: remote access (user) or site-to-site. <b>IPsec</b>: <b>AH</b> = integrity/authentication only, <b>ESP</b> = encryption + integrity; <b>tunnel mode</b> encrypts the whole packet (site-to-site), <b>transport mode</b> just the payload. <b>TLS</b> VPN works through browsers.</li><li><b>SD-WAN</b> — software-defined WAN across links (broadband, LTE, MPLS).</li><li><b>SASE</b> — cloud-delivered networking + security (SD-WAN, SWG, CASB, ZTNA, FWaaS) close to users.</li></ul>"
+  }
+ ],
+ "o3_3": [
+  {
+   "h": "Types and classifications",
+   "html": "<ul><li>Types: <b>regulated</b> (PII, PHI, PCI), <b>trade secret</b>, <b>intellectual property</b>, <b>legal</b>, <b>financial</b>, human- vs non-human-readable.</li><li>Classifications: <b>sensitive</b>, <b>confidential</b>, <b>public</b>, <b>restricted</b>, <b>private</b>, <b>critical</b>. Classification decides the controls.</li></ul>"
+  },
+  {
+   "h": "States of data",
+   "html": "<table><tr><th>State</th><th>Protect with</th></tr><tr><td><b>At rest</b> (stored)</td><td>Full-disk / database / file encryption, permissions</td></tr><tr><td><b>In transit</b> (moving)</td><td>TLS, IPsec, VPN</td></tr><tr><td><b>In use</b> (in memory/processing)</td><td>Secure enclaves, memory protection, access control</td></tr></table><p><b>Data sovereignty</b> — data is subject to the laws of the country where it is stored. <b>Geolocation</b> — restrict where data/users can be.</p>"
+  },
+  {
+   "h": "Methods",
+   "html": "<ul><li><b>Encryption</b> (reversible with the key) vs <b>hashing</b> (one-way).</li><li><b>Masking</b> — hide part of the value for display (****1234).</li><li><b>Tokenization</b> — substitute a meaningless token; original kept in a vault.</li><li><b>Obfuscation</b> — make it hard to understand.</li><li><b>Segmentation</b> — keep sensitive data in separate zones.</li><li><b>Permission restrictions</b> — least privilege on the data itself.</li></ul>"
+  }
+ ],
+ "o3_4": [
+  {
+   "h": "Availability",
+   "html": "<ul><li><b>High availability</b>: load balancing vs <b>clustering</b> (servers acting as one, failover).</li><li><b>Sites</b>: <b>hot</b> (ready now, most expensive), <b>warm</b> (hardware, needs data/config), <b>cold</b> (space and power only, cheapest, slowest). <b>Geographic dispersion</b> so one disaster can't take both.</li><li><b>Platform diversity</b> and <b>multi-cloud</b> avoid single-vendor failure.</li><li><b>Continuity of operations (COOP)</b>, <b>capacity planning</b> (people, technology, infrastructure).</li></ul>"
+  },
+  {
+   "h": "Metrics",
+   "html": "<table><tr><th>Metric</th><th>Means</th></tr><tr><td><b>RPO</b></td><td>Max acceptable <b>data loss</b>, in time (e.g. 4 h → back up at least every 4 h)</td></tr><tr><td><b>RTO</b></td><td>Max time to <b>restore service</b></td></tr><tr><td><b>MTTR</b></td><td>Mean time to repair</td></tr><tr><td><b>MTBF</b></td><td>Mean time between failures (reliability)</td></tr></table>"
+  },
+  {
+   "h": "Backups",
+   "html": "<ul><li><b>Full</b> — everything; fastest restore.</li><li><b>Incremental</b> — changes since the <i>last backup of any kind</i>; fastest backup; restore = last full + <b>every</b> incremental since.</li><li><b>Differential</b> — changes since the <i>last full</i>; restore = last full + the <b>latest</b> differential.</li><li><b>Snapshots</b>, <b>replication</b> (near-real-time copy), <b>journaling</b>, onsite vs offsite, frequency, <b>encryption</b> of backups.</li></ul>"
+  },
+  {
+   "h": "Testing & power",
+   "html": "<p>Testing: <b>tabletop exercises</b> (discussion), <b>fail over</b>, <b>simulation</b>, <b>parallel processing</b>. Power: <b>UPS</b> (short-term battery, clean shutdown), <b>generators</b> (long-term).</p>"
+  }
+ ],
+ "o4_1": [
+  {
+   "h": "Secure baselines",
+   "html": "<p><b>Establish</b> (from vendor guides, CIS Benchmarks), <b>deploy</b> (GPO, MDM, configuration management, IaC) and <b>maintain</b> (scan for drift, update as threats change).</p><p>Hardening targets: mobile devices, workstations, switches, routers, cloud infrastructure, servers, ICS/SCADA, embedded systems, RTOS, IoT — disable what you don't need, change defaults, patch, restrict management access.</p>"
+  },
+  {
+   "h": "Wireless",
+   "html": "<ul><li><b>WPA3</b> — SAE (Simultaneous Authentication of Equals) replaces PSK handshake; resists offline dictionary attacks. WPA2 still common.</li><li><b>AAA/RADIUS</b> for enterprise Wi-Fi with <b>802.1X/EAP</b> (EAP-TLS uses certificates on both sides; PEAP uses a server certificate + password).</li><li><b>Site survey</b> and <b>heat maps</b> to place access points and find rogue APs; installation considerations.</li></ul>"
+  },
+  {
+   "h": "Mobile",
+   "html": "<ul><li><b>MDM</b> — enforce PIN, encryption, remote wipe, app control.</li><li>Deployment models: <b>BYOD</b> (user owns), <b>COPE</b> (corporate-owned, personally enabled), <b>CYOD</b> (choose from an approved list).</li><li>Connection methods: cellular, Wi-Fi, Bluetooth.</li></ul>"
+  },
+  {
+   "h": "Application security",
+   "html": "<ul><li><b>Input validation</b> (server side), <b>secure cookies</b> (Secure, HttpOnly, SameSite), <b>static code analysis (SAST)</b>, <b>code signing</b>.</li><li><b>Sandboxing</b> — run untrusted code in an isolated environment.</li><li><b>Monitoring</b> of applications and systems.</li></ul>"
+  }
+ ],
+ "o4_2": [
+  {
+   "h": "Lifecycle",
+   "html": "<ul><li><b>Acquisition/procurement</b> — buy from approved vendors with security requirements.</li><li><b>Assignment/accounting</b> — <b>ownership</b> (who is accountable) and <b>classification</b>.</li><li><b>Monitoring/asset tracking</b> — <b>inventory</b> and <b>enumeration</b> (discovering what is actually on the network).</li></ul>"
+  },
+  {
+   "h": "Disposal",
+   "html": "<table><tr><th>Method</th><th>What it does</th></tr><tr><td><b>Sanitization</b></td><td>Overwrite/erase so data can't be recovered; device can be reused</td></tr><tr><td><b>Destruction</b></td><td>Shred, pulverize, incinerate, degauss (magnetic media) — device is gone</td></tr><tr><td><b>Certification</b></td><td>Documented proof (certificate of destruction) from the vendor</td></tr><tr><td><b>Data retention</b></td><td>Keep data as long as required by law/policy — no longer</td></tr></table><div class=\"callout trap\"><b class=\"k\">Trap</b>Degaussing does nothing to SSDs (no magnetic storage) — use cryptographic erase or physical destruction.</div>"
+  }
+ ],
+ "o4_3": [
+  {
+   "h": "Identification",
+   "html": "<ul><li><b>Vulnerability scan</b> (credentialed = deeper, non-credentialed = attacker's view), <b>application security</b>: static analysis (code), dynamic analysis (running app), package monitoring.</li><li><b>Threat feeds</b>: OSINT, proprietary, information-sharing organizations (ISACs), <b>dark web</b>.</li><li><b>Penetration testing</b>, <b>responsible disclosure / bug bounty</b>, <b>system/process audit</b>.</li></ul>"
+  },
+  {
+   "h": "Analysis",
+   "html": "<ul><li><b>CVE</b> = the ID of a specific vulnerability. <b>CVSS</b> = its severity score (0–10).</li><li><b>False positive</b> = reported but not real; <b>false negative</b> = real but missed (the dangerous one).</li><li><b>Prioritize</b> by severity <i>and</i> exposure, environmental variables, industry/organizational impact, and <b>risk tolerance</b>. An internet-facing CVSS 8 often beats an isolated CVSS 9.</li></ul>"
+  },
+  {
+   "h": "Response, validation, reporting",
+   "html": "<ul><li>Response: <b>patching</b>, <b>insurance</b>, <b>segmentation</b>, <b>compensating controls</b>, <b>exceptions and exemptions</b> (documented, time-limited acceptance).</li><li>Validation: <b>rescanning</b>, <b>audit</b>, <b>verification</b>.</li><li>Reporting to stakeholders.</li></ul>"
+  }
+ ],
+ "o4_4": [
+  {
+   "h": "Activities",
+   "html": "<ul><li><b>Log aggregation</b> — collect logs centrally.</li><li><b>Alerting</b> and <b>alert response/remediation/validation</b>; <b>quarantine</b>.</li><li><b>Alert tuning</b> — reduce false positives so real alerts get attention.</li><li>Scanning, reporting, <b>archiving</b> (retention for investigations/compliance).</li></ul>"
+  },
+  {
+   "h": "Tools",
+   "html": "<table><tr><th>Tool</th><th>What it does</th></tr><tr><td><b>SIEM</b></td><td>Aggregates and correlates logs from many sources; alerts and dashboards</td></tr><tr><td><b>SCAP</b></td><td>Standards for automated configuration/vulnerability checking</td></tr><tr><td>Benchmarks</td><td>Secure configuration standards to check against</td></tr><tr><td>Agent vs agentless</td><td>Software on the host vs remote checks</td></tr><tr><td>Antivirus</td><td>Signature/heuristic malware detection</td></tr><tr><td><b>DLP</b></td><td>Detects/blocks sensitive data leaving</td></tr><tr><td><b>SNMP traps</b></td><td>Devices push alerts to a manager</td></tr><tr><td><b>NetFlow</b></td><td>Metadata about traffic flows (who talked to whom, how much) — not content</td></tr><tr><td>Vulnerability scanners</td><td>Find known weaknesses</td></tr></table>"
+  }
+ ],
+ "o4_5": [
+  {
+   "h": "Network & web",
+   "html": "<ul><li><b>Firewall</b> rules, access lists, ports/protocols, screened subnets.</li><li><b>IDS/IPS</b>: trends and <b>signatures</b>.</li><li><b>Web filter</b>: agent-based, <b>centralized proxy</b>, <b>URL scanning</b>, <b>content categorization</b>, block rules, <b>reputation</b>.</li><li><b>DNS filtering</b> — block lookups of malicious domains.</li><li><b>NAC</b> — check device posture before network access.</li></ul>"
+  },
+  {
+   "h": "Email authentication",
+   "html": "<table><tr><th>Record</th><th>Purpose</th></tr><tr><td><b>SPF</b></td><td>DNS list of servers allowed to send for the domain</td></tr><tr><td><b>DKIM</b></td><td>Cryptographic signature on the message proving it wasn't altered and came from the domain</td></tr><tr><td><b>DMARC</b></td><td>Policy telling receivers what to do when SPF/DKIM fail (none/quarantine/reject) and where to send reports</td></tr></table><p>Plus a <b>gateway</b> that filters spam/malware.</p>"
+  },
+  {
+   "h": "Hosts & users",
+   "html": "<ul><li>OS security: <b>Group Policy</b> (Windows), <b>SELinux</b> (mandatory access control on Linux).</li><li><b>Secure protocols</b>: choose the protocol, the port and the transport method (SSH not Telnet, SFTP not FTP, LDAPS not LDAP, HTTPS, SNMPv3).</li><li><b>File integrity monitoring (FIM)</b> — alerts when critical files change.</li><li><b>DLP</b>, <b>EDR</b> (endpoint detection & response) / <b>XDR</b> (extended across endpoints, network, cloud, email).</li><li><b>User behavior analytics (UBA)</b> — baselines normal user activity and flags anomalies.</li></ul>"
+  }
+ ],
+ "o4_6": [
+  {
+   "h": "Lifecycle & SSO",
+   "html": "<ul><li><b>Provisioning/de-provisioning</b>, <b>permission assignments</b>, <b>identity proofing</b> (verify who someone really is), <b>attestation</b> (periodic review/recertification of access).</li><li><b>Federation</b> — trust identities from another organization.</li><li>SSO: <b>LDAP</b> (directory queries), <b>SAML</b> (XML assertions, enterprise web SSO), <b>OAuth</b> (delegated <i>authorization</i> — \"let this app access my calendar\"), <b>OpenID Connect</b> (authentication layer on OAuth).</li></ul>"
+  },
+  {
+   "h": "Access control models",
+   "html": "<table><tr><th>Model</th><th>Decided by</th></tr><tr><td><b>MAC</b> (mandatory)</td><td>Labels/clearances set by the system/admins (military)</td></tr><tr><td><b>DAC</b> (discretionary)</td><td>The owner of the resource</td></tr><tr><td><b>RBAC</b> (role-based)</td><td>Job role</td></tr><tr><td><b>Rule-based</b></td><td>System-wide rules (e.g. firewall ACLs)</td></tr><tr><td><b>ABAC</b> (attribute-based)</td><td>Attributes: user, resource, environment (dept=HR AND time=9–5)</td></tr><tr><td>Time-of-day restrictions</td><td>When access is allowed</td></tr></table><p>Plus <b>least privilege</b>.</p>"
+  },
+  {
+   "h": "MFA & passwords",
+   "html": "<ul><li>Factors: <b>something you know</b> (password, PIN), <b>have</b> (token, phone, smart card), <b>are</b> (biometrics), <b>somewhere you are</b> (location). Two of the <i>same</i> factor is not MFA.</li><li>Implementations: biometrics, hard/soft <b>authentication tokens</b>, security keys (FIDO2).</li><li>Passwords: length, complexity, reuse, expiration, age; <b>password managers</b>; <b>passwordless</b>.</li><li><b>PAM</b>: <b>just-in-time</b> permissions, <b>password vaulting</b>, <b>ephemeral credentials</b>.</li></ul>"
+  }
+ ],
+ "o4_7": [
+  {
+   "h": "Use cases",
+   "html": "<p>User provisioning · resource provisioning · <b>guard rails</b> · security groups · <b>ticket creation</b> · escalation · enabling/disabling services and access · continuous integration and testing · integrations and APIs. <b>SOAR</b> platforms run playbooks that automate response.</p>"
+  },
+  {
+   "h": "Benefits & considerations",
+   "html": "<table><tr><th>Benefits</th><th>Considerations</th></tr><tr><td>Efficiency/time saving · enforcing baselines · standard infrastructure configurations · scaling securely · employee retention · reaction time · workforce multiplier</td><td>Complexity · cost · <b>single point of failure</b> · <b>technical debt</b> · ongoing supportability</td></tr></table>"
+  }
+ ],
+ "o4_8": [
+  {
+   "h": "The process",
+   "html": "<ol><li><b>Preparation</b> — plans, tools, training, contacts.</li><li><b>Detection</b> — notice something is wrong.</li><li><b>Analysis</b> — confirm and scope the incident.</li><li><b>Containment</b> — stop the spread (isolate hosts, block accounts).</li><li><b>Eradication</b> — remove the cause (malware, accounts, vulnerabilities).</li><li><b>Recovery</b> — restore systems and monitor.</li><li><b>Lessons learned</b> — what to improve.</li></ol><p>Testing: <b>tabletop exercise</b> and <b>simulation</b>. <b>Root cause analysis</b> after. <b>Threat hunting</b> proactively searches for threats that evaded detection.</p>"
+  },
+  {
+   "h": "Digital forensics",
+   "html": "<ul><li><b>Legal hold</b> — preserve relevant data; don't delete.</li><li><b>Chain of custody</b> — documented record of who handled evidence, when.</li><li><b>Acquisition</b> (image the drive, capture memory), <b>preservation</b> (hashes prove integrity), <b>reporting</b>, <b>e-discovery</b>.</li><li><b>Order of volatility</b> — collect the most volatile first: CPU registers/cache → RAM → swap/temp → disk → remote logs → archival/backup media.</li></ul>"
+  }
+ ],
+ "o4_9": [
+  {
+   "h": "Logs and what they answer",
+   "html": "<table><tr><th>Source</th><th>Answers</th></tr><tr><td>Firewall logs</td><td>Which connections were allowed/blocked, from where</td></tr><tr><td>Application logs</td><td>What the app did, errors, user actions</td></tr><tr><td>Endpoint logs</td><td>Process launches, EDR detections on hosts</td></tr><tr><td>OS-specific security logs</td><td>Logons, privilege use, account changes</td></tr><tr><td>IDS/IPS logs</td><td>Which signatures fired</td></tr><tr><td>Network logs</td><td>Switch/router events, DHCP, DNS</td></tr><tr><td>Metadata</td><td>Email headers, file properties — who/when/where, not content</td></tr></table>"
+  },
+  {
+   "h": "Other sources",
+   "html": "<p><b>Vulnerability scans</b> (was it exposed?), <b>automated reports</b>, <b>dashboards</b> (trend at a glance), <b>packet captures</b> (full content of traffic — the most detail, the most storage).</p>"
+  }
+ ],
+ "o5_1": [
+  {
+   "h": "The document hierarchy",
+   "html": "<table><tr><th>Document</th><th>Is it mandatory?</th><th>Example</th></tr><tr><td><b>Policy</b></td><td>Yes — high-level intent from leadership</td><td>AUP, information security policy, BC/DR, IR, SDLC, change management policies</td></tr><tr><td><b>Standard</b></td><td>Yes — specific measurable requirement</td><td>Password, access control, physical security, encryption standards</td></tr><tr><td><b>Procedure</b></td><td>Yes — step-by-step how</td><td>Change management, onboarding/offboarding, playbooks</td></tr><tr><td><b>Guideline</b></td><td>No — recommendation</td><td>\"Consider using a password manager\"</td></tr></table>"
+  },
+  {
+   "h": "External considerations & structures",
+   "html": "<ul><li>External: regulatory, legal, industry, local/regional, national, global.</li><li>Monitoring and revision — documents are reviewed on a schedule and after changes.</li><li>Structures: <b>boards</b>, <b>committees</b>, <b>government entities</b>; <b>centralized vs decentralized</b> governance.</li></ul>"
+  },
+  {
+   "h": "Data roles",
+   "html": "<table><tr><th>Role</th><th>Responsibility</th></tr><tr><td><b>Owner</b></td><td>Senior person accountable for the data; decides classification</td></tr><tr><td><b>Controller</b></td><td>Decides why and how personal data is processed (privacy law)</td></tr><tr><td><b>Processor</b></td><td>Processes data on behalf of the controller (e.g. a payroll vendor)</td></tr><tr><td><b>Custodian / steward</b></td><td>Day-to-day handling: backups, permissions, data quality</td></tr></table>"
+  }
+ ],
+ "o5_2": [
+  {
+   "h": "Assessment",
+   "html": "<ul><li>Assessments: <b>ad hoc</b>, <b>recurring</b>, <b>one-time</b>, <b>continuous</b>.</li><li><b>Qualitative</b> — low/medium/high, heat maps, judgment. <b>Quantitative</b> — money and numbers.</li></ul><table><tr><th>Term</th><th>Formula / meaning</th></tr><tr><td><b>AV</b> asset value</td><td>What the asset is worth</td></tr><tr><td><b>EF</b> exposure factor</td><td>% of the asset lost in one event</td></tr><tr><td><b>SLE</b></td><td>AV × EF — loss from one event</td></tr><tr><td><b>ARO</b></td><td>How many times per year (0.2 = once every 5 years)</td></tr><tr><td><b>ALE</b></td><td>SLE × ARO — expected yearly loss</td></tr></table>"
+  },
+  {
+   "h": "Registers & appetite",
+   "html": "<ul><li><b>Risk register</b>: each risk with key risk indicators, <b>risk owners</b> and the <b>risk threshold</b>.</li><li><b>Risk tolerance</b> — acceptable variation. <b>Risk appetite</b>: <b>expansionary</b> (seeks risk for growth), <b>conservative</b> (avoids), <b>neutral</b>.</li></ul>"
+  },
+  {
+   "h": "Strategies",
+   "html": "<table><tr><th>Strategy</th><th>What it means</th></tr><tr><td><b>Transfer</b></td><td>Shift it to someone else — insurance, outsourcing</td></tr><tr><td><b>Accept</b></td><td>Live with it (<b>exemption</b> / <b>exception</b> documented)</td></tr><tr><td><b>Avoid</b></td><td>Stop the risky activity entirely</td></tr><tr><td><b>Mitigate</b></td><td>Add controls to reduce likelihood or impact</td></tr></table><p><b>Inherent risk</b> (before controls) − controls = <b>residual risk</b> (what remains).</p>"
+  },
+  {
+   "h": "Business impact analysis",
+   "html": "<p>The <b>BIA</b> identifies critical functions and sets <b>RTO</b> (time to restore), <b>RPO</b> (acceptable data loss), and uses <b>MTTR</b>/<b>MTBF</b> for reliability.</p>"
+  }
+ ],
+ "o5_3": [
+  {
+   "h": "Assessment & selection",
+   "html": "<ul><li>Vendor assessment: <b>penetration testing</b>, <b>right-to-audit clause</b>, evidence of <b>internal audits</b>, <b>independent assessments</b>, <b>supply chain analysis</b>.</li><li>Selection: <b>due diligence</b>, check for <b>conflicts of interest</b>.</li><li><b>Vendor monitoring</b>, <b>questionnaires</b>, <b>rules of engagement</b> (what testers may and may not do).</li></ul>"
+  },
+  {
+   "h": "Agreement types",
+   "html": "<table><tr><th>Agreement</th><th>Purpose</th></tr><tr><td><b>SLA</b></td><td>Measurable service levels: uptime, response time, penalties</td></tr><tr><td><b>MOA</b></td><td>Memorandum of agreement — formal terms of cooperation</td></tr><tr><td><b>MOU</b></td><td>Memorandum of understanding — intent to work together, usually not binding</td></tr><tr><td><b>MSA</b></td><td>Master service agreement — umbrella terms for future work</td></tr><tr><td><b>SOW / WO</b></td><td>Statement of work / work order — specific tasks, deliverables, timeline under the MSA</td></tr><tr><td><b>NDA</b></td><td>Non-disclosure — keep information confidential</td></tr><tr><td><b>BPA</b></td><td>Business partners agreement — how partners share profit/loss and responsibilities</td></tr></table>"
+  }
+ ],
+ "o5_4": [
+  {
+   "h": "Reporting & monitoring",
+   "html": "<ul><li>Reporting: <b>internal</b> and <b>external</b> (to regulators).</li><li>Consequences of non-compliance: <b>fines</b>, <b>sanctions</b>, <b>reputational damage</b>, <b>loss of license</b>, <b>contractual impacts</b>.</li><li>Monitoring: <b>due diligence/care</b>, <b>attestation and acknowledgement</b>, internal and external, <b>automation</b>.</li></ul>"
+  },
+  {
+   "h": "Privacy",
+   "html": "<ul><li>Legal implications: local/regional, national, global (e.g. <b>GDPR</b> in the EU).</li><li><b>Data subject</b> — the person the data is about; rights include access and the <b>right to be forgotten</b>.</li><li>Controller vs processor (see 5.1), <b>ownership</b>, <b>data inventory and retention</b>.</li></ul>"
+  },
+  {
+   "h": "Frameworks you should recognize",
+   "html": "<p>PCI DSS (card data), HIPAA (US health), GDPR (EU personal data), SOX (financial reporting), GLBA (financial institutions), NIST CSF / RMF, ISO 27001 (ISMS) / 27002 (controls), CIS Controls, SOC 2 (service organization controls).</p>"
+  }
+ ],
+ "o5_5": [
+  {
+   "h": "Audits",
+   "html": "<ul><li><b>Internal</b>: compliance, audit committee, <b>self-assessments</b>.</li><li><b>External</b>: regulatory, examinations, assessment, <b>independent third-party audit</b>.</li><li><b>Attestation</b> — an auditor formally states controls meet requirements.</li></ul>"
+  },
+  {
+   "h": "Penetration testing",
+   "html": "<ul><li>Types: <b>physical</b>, <b>offensive</b> (red team), <b>defensive</b> (blue team), <b>integrated</b> (purple — red and blue together).</li><li>Knowledge of the environment: <b>known</b> (full info, white box), <b>partially known</b> (gray box), <b>unknown</b> (no info, black box).</li><li>Reconnaissance: <b>passive</b> (OSINT, no contact with targets) vs <b>active</b> (scanning that touches targets).</li><li>Always with written authorization and <b>rules of engagement</b> — scope, timing, what is off-limits.</li></ul>"
+  }
+ ],
+ "o5_6": [
+  {
+   "h": "Program elements",
+   "html": "<ul><li><b>Phishing campaigns</b> — simulated phishing, teach users to <b>recognize</b> and <b>respond</b> (report, don't click).</li><li><b>Anomalous behavior recognition</b>: risky, unexpected or unintentional behavior.</li><li>User guidance/training: policy/handbooks, <b>situational awareness</b>, <b>insider threat</b>, password management, removable media and cables, social engineering, operational security, <b>hybrid/remote work</b> environments.</li><li>Reporting and monitoring: <b>initial</b> and <b>recurring</b>; track metrics (click rate, report rate).</li><li>Development and execution — plan, deliver, measure, improve.</li></ul><div class=\"callout pro\"><b class=\"k\">What success looks like</b>The metric that matters most is the <b>report rate</b>: people who report a phish quickly turn every employee into a sensor.</div>"
+  }
+ ]
+}
